@@ -12,7 +12,7 @@ rod_distance = 45;
 module x_end_base(){
 // Main block
 height = 58;
-translate(v=[-15,-9,height/2]) cube(size = [17,39,height], center = true);
+translate(v=[-15,-9.25,height/2]) cube(size = [17,39,height], center = true);
 // Bearing holder
  vertical_bearing_base();	
 //Nut trap
