@@ -31,14 +31,17 @@ module z_bottom_fancy(){
 
 module z_bottom_holes(){
  // Frame mounting screw holes
- translate([-1,10,10+5]) rotate([0,90,0]) cylinder(h = 20, r=1.8, $fn=30);
- translate([-1,10+20,10+5]) rotate([0,90,0]) cylinder(h = 20, r=1.8, $fn=30);
- translate([-1,10+10,10+20+5]) rotate([0,90,0]) cylinder(h = 20, r=1.8, $fn=30);
+ //translate([-1,10,10+5]) rotate([0,90,0]) cylinder(h = 20, r=1.8, $fn=30);
+ //translate([-1,10+20,10+5]) rotate([0,90,0]) cylinder(h = 20, r=1.8, $fn=30);
+ translate([-1,10+10,10+20+5]) rotate([0,90,0]) cylinder(h = 20, r=1.5, $fn=30);
+ translate([-1,10+10,10+0+5]) rotate([0,90,0]) cylinder(h = 20, r=1.5, $fn=30);
 
  // Frame mounting screw head holes
- translate([4,10,10+5]) rotate([0,90,0]) cylinder(h = 20, r=3.1, $fn=30);
- translate([4,10+20,10+5]) rotate([0,90,0]) cylinder(h = 20, r=3.1, $fn=30);
- translate([4,10+10,10+20+5]) rotate([0,90,0]) cylinder(h = 20, r=3.1, $fn=30);
+ //translate([4,10,10+5]) rotate([0,90,0]) cylinder(h = 20, r=3.1, $fn=30);
+ //translate([4,10+20,10+5]) rotate([0,90,0]) cylinder(h = 20, r=3.1, $fn=30);
+ translate([4,10+10,10+20+5]) rotate([0,90,0]) cylinder(h = 20, r=3.5, $fn=30);
+ translate([4,10+10,10+0+5]) rotate([0,90,0]) cylinder(h = 20, r=3.5, $fn=30);
+ 
  translate([4,10+10-3.1,10+20+5]) cube([10,6.2,10]);
 
  // Z rod holder
@@ -47,22 +50,30 @@ module z_bottom_holes(){
 
  // motor mounting
  translate([25+4.3,20,-1]){
- //translate([15.5,15.5,-1]) cylinder(h = 20, r=1.8, $fn=30);
- 
- translate([15.5,15.5,-1]) cylinder(h = 20, r=1.8, $fn=30);
- translate([15.5,-15.5,-1]) cylinder(h = 20, r=1.8, $fn=30);
- translate([-15.5,15.5,-1]) cylinder(h = 20, r=1.8, $fn=30);
- translate([-15.5,-15.5,-1]) cylinder(h = 20, r=1.8, $fn=30);
- 
- 
- translate([0,0,-1]) cylinder(h = 20, r=12, $fn=30);
+     translate([15.5,15.5,-1]) cylinder(h = 20, r=1.8, $fn=30);
+     translate([15.5,-15.5,-1]) cylinder(h = 20, r=1.8, $fn=30);
+     translate([-15.5,15.5,-1]) cylinder(h = 20, r=1.8, $fn=30);
+     translate([-15.5,-15.5,-1]) cylinder(h = 20, r=1.8, $fn=30);
+     translate([0,0,-1]) cylinder(h = 20, r=12, $fn=30);
  }
 
 }
 
+module z_bottom_rail() {
+    difference() {
+        translate([-3,10+10-8.25/2,]) cube([3,8.25,35]);
+        translate([-3,10+10,10+20+5]) rotate([0,90,0]) cylinder(h = 3, d1=13, d2=8.5, $fn=30);
+        translate([-3,10+10,10+0+5]) rotate([0,90,0]) cylinder(h = 3, d1=13, d2=8.5, $fn=30);
+    }
+}
+
 module z_bottom_right(){
+    z_bottom_rail();
     difference(){
-        z_bottom_base();
+        union() {
+            z_bottom_base();
+            z_bottom_rail();
+        }
         z_bottom_fancy();
         z_bottom_holes();
     }
@@ -70,13 +81,8 @@ module z_bottom_right(){
 
 module z_bottom_left(){
  translate([0,-13,0]) mirror([0,1,0]) 
-    difference(){
-        z_bottom_base();
-        z_bottom_fancy();
-        z_bottom_holes();
- }
+    z_bottom_right();
 }
 
-//z_bottom_holder();
-#z_bottom_right();
-#z_bottom_left();
+z_bottom_right();
+z_bottom_left();
