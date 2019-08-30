@@ -4,12 +4,13 @@
 // Josef Průša <iam@josefprusa.cz> and contributors
 // http://www.reprap.org/wiki/Prusa_Mendel
 // http://prusamendel.org
-
+ 
 use <x-end.scad>
+include <common_dimensions.scad>
 
 module x_end_motor_base(){
- x_end_base();
- translate(v=[-15,31,26.5]) cube(size = [17,44,53], center = true);
+    x_end_base();
+    translate(v=[-x_end_base_depth-(t8nut_id/2),(z_bearing_diam/2)+thinwall,0]) cube(size = [17,44,x_end_base_height], center = false);
 }
 
 module x_end_motor_endstop_base(){
