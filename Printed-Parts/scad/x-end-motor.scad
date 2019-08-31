@@ -14,7 +14,7 @@ module x_end_motor_base(){
 }
 
 module x_end_motor_endstop_base(){
-    translate([-23.5,-28.5,58]){
+    translate([-23.5,-28.5,x_end_base_height]){
         difference(){
             // Base block
             cube([17,18.2,4]);
@@ -25,7 +25,7 @@ module x_end_motor_endstop_base(){
 }
 
 module x_end_motor_endstop_holes(){
-    translate([-23.5,-28.5,58]){
+    translate([-23.5,-28.5,x_end_base_height]){
         translate([17/2,7.5,-3]){
             // Back screw hole for endstop
             translate([-4.75,0,0])cylinder(r=1,h=19,$fn=20);
@@ -36,46 +36,51 @@ module x_end_motor_endstop_holes(){
 }
 
 module x_end_motor_holes(){
- x_end_holes();
- // Position to place
- translate(v=[-1,32,30.25]){
-  // Belt hole
-  translate(v=[-14,1,0]) cube(size = [10,46,22], center = true);
-  // Motor mounting holes
-  translate(v=[20,-15.5,-15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 70, r=1.8, $fn=30);
-  translate(v=[1,-15.5,-15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 10, r=3.1, $fn=30);
-  translate(v=[20,-15.5,15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 70, r=1.8, $fn=30);
-  translate(v=[1,-15.5,15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 10, r=3.1, $fn=30);
-   translate(v=[20,15.5,-15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 70, r=1.8, $fn=30);
-  translate(v=[1,15.5,-15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 10, r=3.1, $fn=30);
-  translate(v=[20,15.5,15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 70, r=1.8, $fn=30);
-  translate(v=[1,15.5,15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 10, r=3.1, $fn=30);
+    x_end_holes();
+    
+    // Position to place
+    translate(v=[-1,32,x_end_base_height/2-x_idler_to_stepper_offset]) {
+        // Belt hole
+        //translate(v=[-14,1,0]) cube(size = [10,46,22], center = true);
+        // Motor mounting holes
+        translate(v=[20,-15.5,-15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 70, r=1.8, $fn=30);
+        translate(v=[1,-15.5,-15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 10, r=3.1, $fn=30);
+        translate(v=[20,-15.5,15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 70, r=1.8, $fn=30);
+        translate(v=[1,-15.5,15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 10, r=3.1, $fn=30);
+        translate(v=[20,15.5,-15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 70, r=1.8, $fn=30);
+        translate(v=[1,15.5,-15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 10, r=3.1, $fn=30);
+        translate(v=[20,15.5,15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 70, r=1.8, $fn=30);
+        translate(v=[1,15.5,15.5]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 10, r=3.1, $fn=30);
 
-  // Material saving cutout 
-  translate(v=[-10,12,10]) cube(size = [60,42,42], center = true);
+        // Cutout for stepper bump around shaft
+        translate([0,0,0]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 100, d=27, $fn=30);
+        
+        // Material saving cutout 
+        //translate(v=[-10,12,10]) cube(size = [60,42,42], center = true);
+        translate([-50,-8.5,-8.5]) cube([100, 100, 100]);
 
-  // Material saving cutout
-  translate(v=[-10,40,-30]) rotate(a=[45,0,0])  cube(size = [60,42,42], center = true);
-  // Motor shaft cutout
-  //#translate(v=[0,0,0]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 70, r=17, $fn=6);
- }
+        // Material saving cutout
+        translate(v=[-10,40,-30]) rotate(a=[45,0,0])  cube(size = [60,100,42], center = true);
+        // Motor shaft cutout
+        //#translate(v=[0,0,0]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 70, r=17, $fn=6);
+    }
 }
 
 // Motor shaft cutout
 module x_end_motor_shaft_cutout(){
     union(){
-    difference(){
-        translate(v=[0,32,30]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 70, r=17, $fn=6);
-       
-        translate(v=[-10,-17+32,30]) cube(size = [60,2,10], center = true);
-        translate(v=[-10,-8+32,-15.5+30]) rotate(a=[60,0,0]) cube(size = [60,2,10], center = true); ///
-        translate(v=[-10,8+32,-15.5+30]) rotate(a=[-60,0,0]) cube(size = [60,2,10], center = true);
-        
-        
+        difference(){
+            translate(v=[0,32,30]) rotate(a=[0,-90,0]) rotate(a=[0,0,90]) cylinder(h = 70, r=17, $fn=6);
+           
+            translate(v=[-10,-17+32,30]) cube(size = [60,2,10], center = true);
+            translate(v=[-10,-8+32,-15.5+30]) rotate(a=[60,0,0]) cube(size = [60,2,10], center = true); ///
+            translate(v=[-10,8+32,-15.5+30]) rotate(a=[-60,0,0]) cube(size = [60,2,10], center = true);
+            
+            
+        }
+        translate(v=[-30,25.2,-11.8 +30]) rotate(a=[0,90,0]) cylinder(h = 30, r=3, $fn=30);
+        translate(v=[-30,19.05,30]) rotate(a=[0,90,0]) cylinder(h = 30, r=3.5, $fn=100);
     }
-    translate(v=[-30,25.2,-11.8 +30]) rotate(a=[0,90,0]) cylinder(h = 30, r=3, $fn=30);
-    translate(v=[-30,19.05,30]) rotate(a=[0,90,0]) cylinder(h = 30, r=3.5, $fn=100);
-}
 }
 
 
@@ -88,7 +93,7 @@ module x_end_motor(){
             x_end_motor_base();
             x_end_motor_endstop_base();
          }
-  x_end_motor_shaft_cutout();
+  //x_end_motor_shaft_cutout();
   x_end_motor_holes();
   x_end_motor_endstop_holes();    
       

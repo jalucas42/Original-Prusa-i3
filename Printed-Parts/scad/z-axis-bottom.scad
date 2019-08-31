@@ -47,7 +47,7 @@ module z_bottom_fancy(){
 module z_bottom_holes(){
 
     // Z rod holder
-    translate([0,0,5+1]) rotate([0,180,0]) poly_cylinder(h = 50, r=z_rod_diam/2);
+    translate([0,0,5+1]) rotate([0,180,0]) poly_cylinder(h = 50, r=z_rod_diam_tight/2);
     translate([0,1,0.6]) rotate([0,0,180]) cube([15,2,7]); // it's bit up because it helps with printing
     
     // Cutout to allow sliding stepper in while z-axis is mounted to rail.

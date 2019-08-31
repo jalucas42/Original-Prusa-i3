@@ -19,8 +19,8 @@ module x_end_base(){
     // Bearing holder
     {
         //vertical_bearing_base();	
-        translate(v=[-2-z_bearing_size/4,0,29]) cube(size = [4+z_bearing_size/2,z_bearing_size,x_end_base_height], center = true);
-        cylinder(h = 58, r=z_bearing_size/2, $fn = 90);
+        translate(v=[-2-z_bearing_size/4,0,x_end_base_height/2]) cube(size = [4+z_bearing_size/2,z_bearing_size,x_end_base_height], center = true);
+        cylinder(h = x_end_base_height, r=z_bearing_size/2, $fn = 90);
     }
 
     // T8 Nut trap
@@ -35,8 +35,8 @@ module x_end_base(){
 module x_end_holes(){
     {
         //vertical_bearing_holes();
-        translate(v=[0,0,-1]) poly_cylinder(h = 62, r=(z_bearing_diam/2)+0.1);
-        rotate(a=[0,0,-40]) translate(v=[z_bearing_diam/2-2.9,-0.5,0.5]) cube(size = [thinwall*2,1,62]);       
+        translate(v=[0,0,-1]) poly_cylinder(h = x_end_base_height+2, r=(z_bearing_diam/2)+0.1);
+        rotate(a=[0,0,-40]) translate(v=[z_bearing_diam/2-2.9,-0.5,0.5]) cube(size = [thinwall*2,1,x_end_base_height]);       
     }
 
     // Stress relief (for idler bearing tightening)
@@ -44,16 +44,16 @@ module x_end_holes(){
     
     // Belt hole
     //belt_hole_height = x_end_base_height/2;
-    belt_hole_height = x_end_base_height - 4*thinwall - 2*x_rod_diam;
-    belt_hole_width = 10;
+    belt_hole_height = 31-5; // To fit between NEMA17 mounting screws
+    belt_hole_width = x_end_base_depth-2*thinwall; // 10;
     translate([-x_to_z_offset,0,x_end_base_height/2]) hull() {
         translate([0,0,belt_hole_height/2-belt_hole_width/2]) rotate([90,60,0]) cylinder(d=belt_hole_width, h=200, $fn=6, center=true);
         translate([0,0,-belt_hole_height/2+belt_hole_width/2]) rotate([90,60,0]) cylinder(d=belt_hole_width, h=200, $fn=6, center=true);
     }
 
     // Pushfit rods
-    translate([-x_to_z_offset,-41.5,6]) rotate(a=[-90,0,0]) pushfit_rod(x_rod_diam,50);
-    translate([-x_to_z_offset,-41.5,6+x_rod_distance]) rotate(a=[-90,0,0]) pushfit_rod(x_rod_diam,50);
+    translate([-x_to_z_offset,-41.5,x_end_base_height/2-x_rod_distance/2]) rotate(a=[-90,0,0]) pushfit_rod(x_rod_diam_tight,50);
+    translate([-x_to_z_offset,-41.5,x_end_base_height/2+x_rod_distance/2]) rotate(a=[-90,0,0]) pushfit_rod(x_rod_diam_tight,50);
 
     // TR Nut trap
     // Hole for the nut
