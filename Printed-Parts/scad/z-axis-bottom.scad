@@ -10,13 +10,13 @@ include <common_dimensions.scad>
 
 
 module z_bottom_base(){
-    translate([-z_bottom_width/2-z_motor_ofs,-z_rod_to_rail,0]) cube([z_bottom_width,z_bottom_wall_width+43,5]); // Base
+    translate([-z_bottom_width/2-z_motor_ofs,-z_rod_to_rail,0]) cube([z_bottom_width,z_bottom_wall_width+43,7]); // Base
     translate([-z_bottom_width/2-z_motor_ofs,-z_rod_to_rail,0]) cube([z_bottom_wall_width,z_bottom_wall_width+43,z_bottom_height]); // Motor-side wall
     translate([-z_bottom_width/2-z_motor_ofs+z_bottom_width-z_bottom_wall_width,-z_rod_to_rail,0]) cube([z_bottom_wall_width,z_bottom_wall_width+43,z_bottom_height]); // Rod-side wall
     translate([-z_bottom_width/2-z_motor_ofs,-z_rod_to_rail,0]) cube([z_bottom_width,z_bottom_wall_width,z_bottom_height]); // Base
     
     // Rail guide
-    translate([-8.25/2-z_motor_ofs,-3-43/2-z_bottom_wall_width,0]) cube([8.25,3,z_bottom_height]);
+    translate([-z_railguide_width/2-z_motor_ofs,-z_railguide_depth-43/2-z_bottom_wall_width,0]) cube([8.25,z_railguide_depth,z_bottom_height]);
 
 }
 
@@ -25,6 +25,7 @@ module z_bottom_fancy(){
         translate([-z_motor_ofs-z_bottom_width/2,-50,0]) cube([z_bottom_width, 100, z_bottom_height/2]);
         translate([-z_motor_ofs,0,z_bottom_height*0.75]) rotate([90,0,0]) cylinder(d=z_bottom_height/2, h=100, center=true);
     }
+    
     
     /*
     // corner cutouts
@@ -53,20 +54,24 @@ module z_bottom_holes(){
     // Cutout to allow sliding stepper in while z-axis is mounted to rail.
     translate([-7/2-z_motor_ofs,0,-1]) cube([7,100,20]);
     
+    translate([-z_motor_ofs-12.5,0,5]) cube([25,100,100]);
+    
     translate([-z_motor_ofs,0,-1]) stepper_motor_holes();    
 
     // Frame mounting screw holes
     translate([-z_motor_ofs,0,10+20+5]) rotate([90,0,0]) cylinder(h = 50, r=1.5, $fn=30);
     translate([-z_motor_ofs,0,10+ 0+5]) rotate([90,0,0]) cylinder(h = 50, r=1.5, $fn=30);
 
-    // Frame mounting screw head holes
-    translate([-z_motor_ofs,-z_rod_to_rail+thinwall,10+20+5]) rotate([-90,0,0]) cylinder(h = 50, r=3.5, $fn=30);
-    translate([-z_motor_ofs,-z_rod_to_rail+thinwall,10+ 0+5]) rotate([-90,0,0]) cylinder(h = 50, r=3.5, $fn=30);
+    // Frame mounting screw head holes (3.5mm deep for m3)
+    translate([-z_motor_ofs,-z_rod_to_rail+z_bottom_wall_width-3.5,10+20+5]) rotate([-90,0,0]) cylinder(h = 50, r=3.5, $fn=30);
+    translate([-z_motor_ofs,-z_rod_to_rail+z_bottom_wall_width-3.5,10+ 0+5]) rotate([-90,0,0]) cylinder(h = 50, r=3.5, $fn=30);
 
     // Rail guide nut cutouts
-    translate([-z_motor_ofs,-3-43/2-z_bottom_wall_width,10+20+5]) rotate([-90,0,0]) cylinder(h = 3, d1=13, d2=8.5, $fn=12);
-    translate([-z_motor_ofs,-3-43/2-z_bottom_wall_width,10+ 0+5]) rotate([-90,0,0]) cylinder(h = 3, d1=13, d2=8.5, $fn=12);
-    
+    translate([-z_motor_ofs,-3-43/2-z_bottom_wall_width,10+20+5]) rotate([-90,0,0]) cylinder(h = 3, d1=z_railguide_keepout+2, d2=z_railguide_keepout, $fn=12);
+    translate([-z_motor_ofs,-3-43/2-z_bottom_wall_width,10+ 0+5]) rotate([-90,0,0]) cylinder(h = 3, d1=z_railguide_keepout+2, d2=z_railguide_keepout, $fn=12);
+
+    // Fancy angled side wall reduction
+    rotate([-25,0,0]) translate([-50-z_motor_ofs,-50+20,18]) cube([100, 100, 100]);    
 }
 
 module z_bottom_right(){
@@ -93,4 +98,4 @@ module stepper_motor_holes() {
 }
 
 z_bottom_right();
-z_bottom_left();
+//z_bottom_left();
