@@ -1,41 +1,46 @@
 
 use <polyholes.scad>
 use <printable_bearing.scad>
-
-bearing_diameter = 14.5;
-thinwall = 3;
-bearing_size = bearing_diameter + 2 * thinwall;
-
+include <common_dimensions.scad>
 
 module y_bearing_holder_base() {
-    hull() {
-        translate([0,0,0]) cube([27,35,5.5]);
-        translate([0,35/2,5.5+bearing_size/2-thinwall]) rotate([0,90,0]) cylinder(d=bearing_size, h=27);
+    translate([-y_bearing_holder_width/2,-y_bearing_holder_depth/2,0]) hull() {
+        translate([0,0,0]) cube([y_bearing_holder_width,y_bearing_holder_depth, 5]);
+        translate([y_bearing_holder_width/2,0,y_bearing_holder_rod_ofs]) rotate([-90,0,0]) cylinder(d=y_bearing_od+thinwall+2, h=y_bearing_holder_depth);
     }
 }
 
 module y_bearing_holder_holes() {
-    // Cutout for printable bearing
-    //translate([-1,35/2,5.5+bearing_size/2-thinwall]) rotate([0,90,0]) printable_bearing_negative( length=27+2, od=bearing_size );
-    translate([-1,35/2,5.5+bearing_size/2-thinwall]) rotate([0,90,0]) bearing_cutout( length=27+2, od=bearing_size );
-    
-    ofs = 4;
-    
-    // Cutout screw holes
-    translate([0+ofs,0+ofs,-1]) rotate([0,0,0]) poly_cylinder(r=1.5, h=50);
-    translate([0+ofs,35-ofs,-1]) rotate([0,0,0]) poly_cylinder(r=1.5, h=50);
-    translate([27-ofs,0+ofs,-1]) rotate([0,0,0]) poly_cylinder(r=1.5, h=50);
-    translate([27-ofs,35-ofs,-1]) rotate([0,0,0]) poly_cylinder(r=1.5, h=50);
+
+    // Cut off top of rod slot slightly above center point to give some hold
+    translate([-y_bearing_holder_width/2,-y_bearing_holder_depth/2-1,y_bearing_holder_height]) cube([y_bearing_holder_width,y_bearing_holder_depth+2,20]);
+
+    // Bearing cutout
+    translate([0,-1-y_bearing_holder_depth/2,y_bearing_holder_rod_ofs]) rotate([-90,0,0]) cylinder(d=y_bearing_od, h=y_bearing_holder_depth+2);
 
     // Cutout screw holes
-    translate([0+ofs,0+ofs,3]) rotate([0,0,0]) cylinder(r=6.5/2, h=50, $fn=6);
-    translate([0+ofs,35-ofs,3]) rotate([0,0,0]) cylinder(r=6.5/2, h=50, $fn=6);
-    translate([27-ofs,0+ofs,3]) rotate([0,0,0]) cylinder(r=6.5/2, h=50, $fn=6);
-    translate([27-ofs,35-ofs,3]) rotate([0,0,0]) cylinder(r=6.5/2, h=50, $fn=6);
+    translate([+20,+10,-1]) rotate([0,0,0]) poly_cylinder(r=1.6, h=50);
+    translate([+20,-10,-1]) rotate([0,0,0]) poly_cylinder(r=1.6, h=50);
+    translate([-20,  0,-1]) rotate([0,0,0]) poly_cylinder(r=1.6, h=50);
+
+    // Cutout screw heads
+    translate([+20,+10,3]) rotate([0,0,0]) poly_cylinder(r=6.4/2, h=50);
+    translate([+20,-10,3]) rotate([0,0,0]) poly_cylinder(r=6.4/2, h=50);
+    translate([-20,  0,3]) rotate([0,0,0]) poly_cylinder(r=6.4/2, h=50);
+ 
+    // Center marker cutouts
+    translate([0,-y_bearing_holder_depth/2,-1]) rotate([0,0,-30]) cylinder(d=1.5, h=100, $fn=3);
+    translate([0,+y_bearing_holder_depth/2,-1]) rotate([0,0,30]) cylinder(d=1.5, h=100, $fn=3);
+
+    translate([+20,-y_bearing_holder_depth/2,-1]) rotate([0,0,-30]) cylinder(d=1.0, h=100, $fn=3);
+    translate([+20,+y_bearing_holder_depth/2,-1]) rotate([0,0,30]) cylinder(d=1.0, h=100, $fn=3);
+    translate([-20,-y_bearing_holder_depth/2,-1]) rotate([0,0,-30]) cylinder(d=1.0, h=100, $fn=3);
+    translate([-20,+y_bearing_holder_depth/2,-1]) rotate([0,0,30]) cylinder(d=1.0, h=100, $fn=3);
+
+    // Ziptie cutout
+    translate([0,4/2,y_bearing_holder_rod_ofs]) rotate([90,0,0]) rotate_extrude(angle=360) translate([y_bearing_od/2+2,0]) square([3,4]);
 
 }
-
-
 
 module y_bearing_holder() {
     difference() {
@@ -45,4 +50,5 @@ module y_bearing_holder() {
 }
 
 //my_linear_bearing_cutout( length=27, od=bearing_size );
-rotate([0,-90,0]) y_bearing_holder();
+y_bearing_holder();
+%translate([0,0,y_bearing_holder_rod_ofs]) rotate([90,0,0]) cylinder(d=y_rod_diam, h=100, center=true);
