@@ -20,17 +20,18 @@ module y_beltholder_half() {
     difference() {
         union() {
             // Screw plate base
-            translate([0,0,-2]) cube([2*thinwall+1+4+thinwall,22+0.001,2+6]);
+            translate([0,0,-2]) cube([y_plate_to_belt+1+4+thinwall,22+0.001,2+6]);
             // Main base
             translate([0,-9,-2]) cube([thinwall,22+9+0.001,2+6]);
         }
         // Bottom cutout for pulling belt tight
-        translate([2*thinwall+1+4+thinwall,22+0.001,0]) cylinder(d=12, h=7);
+        translate([y_plate_to_belt+1+4+thinwall,22+0.001,0]) cylinder(d=12, h=7);
+        
         // Belt slot
-        translate([thinwall*2,0,0]) cube([2.1,10,6+1]);
+        translate([y_plate_to_belt,0,0]) cube([2.1,10,6+1]);
         
         // Belt loop hole
-        translate([thinwall*2+2.1/2,7,0]) hull() {
+        translate([y_plate_to_belt+2.1/2,7,0]) hull() {
             translate([0,0,0]) rotate([0,0,45]) cylinder(d=2.1, h=50, $fn=30);
             translate([0,10,0]) cylinder(d=8.5, h=50, $fn=16);
         }
@@ -44,12 +45,13 @@ module y_beltholder_half() {
     }
     
     // Center post in belt loop
-    translate([thinwall*2+2.1/2,7,0]) hull() {
+    translate([y_plate_to_belt+2.1/2,7,0]) hull() {
         translate([0,10,0]) cylinder(d=5, h=6, $fn=16);
         translate([0,3,0]) cylinder(d=1, h=6);
     }
 }
 
+/*
 module knurl_test() {
     //rotate([45,35.26,45]) cube([2,2,2], center=true);
     
@@ -64,3 +66,4 @@ module knurl_test() {
         translate([-50,-50,0.6]) cube([100,100,100]);
     }
 }
+*/

@@ -5,7 +5,7 @@
 // http://www.reprap.org/wiki/Prusa_Mendel
 // http://prusamendel.org
 
-use <bearing.scad>
+//use <bearing.scad>
 use <polyholes.scad>
 
 include <common_dimensions.scad>
@@ -13,7 +13,7 @@ include <common_dimensions.scad>
 module x_end_base(){
     
     // Main block
-    translate(v=[-x_end_base_depth-(t8nut_id/2),-x_end_base_width+(z_bearing_diam/2)+thinwall,0]) cube(size = [x_end_base_depth,x_end_base_width,x_end_base_height], center = false);
+    translate(v=[-x_end_base_depth/2-x_to_z_offset,-x_end_base_width+(z_bearing_diam/2)+thinwall,0]) cube(size = [x_end_base_depth,x_end_base_width,x_end_base_height], center = false);
     //translate(v=[-15,-9.25,x_end_base_height/2]) cube(size = [17,39,x_end_base_height-10], center = true);
     
     // Bearing holder
@@ -26,9 +26,9 @@ module x_end_base(){
     // T8 Nut trap
     {
         // Cylinder
-        translate(v=[0,-z_motor_ofs,0]) poly_cylinder(h = 8, r=12.5, $fn=25);
-        // Hexagon
-        translate(v=[-6,-z_motor_ofs+(17-10.6),10]) rotate([0,0,48.2]) cube(size = [10,5,1], center = true);
+        nut_trap_diam = 25;
+        translate(v=[0,-z_motor_ofs,0]) poly_cylinder(h = 8, r=nut_trap_diam/2, $fn=25);
+        translate(v=[-nut_trap_diam/2,-z_motor_ofs,0]) cube([nut_trap_diam/2,nut_trap_diam/2,8]);
     }    
 }
 
@@ -48,29 +48,33 @@ module x_end_holes(){
         translate([0,0,-x_end_belt_hole_height/2+x_end_belt_hole_width/2]) rotate([90,60,0]) cylinder(d=x_end_belt_hole_width, h=200, $fn=6, center=true);
     }
 
-    // Pushfit rods
+    translate([-x_to_z_offset,x_bearing_diam/2+thinwall+0.5,x_end_base_height/2]) 
     if (x_end_idler_open_end) {
-        translate([-x_to_z_offset,-41.5,x_end_base_height/2-x_rod_distance/2]) rotate(a=[-90,0,0]) pushfit_rod(x_rod_diam_tight,200, center=true);
-        translate([-x_to_z_offset,-41.5,x_end_base_height/2+x_rod_distance/2]) rotate(a=[-90,0,0]) pushfit_rod(x_rod_diam_tight,200, center=true);
+        for (i=[-1,1]) translate([0,0,i*x_rod_distance/2]) rotate(a=[90,0,0]) pushfit_rod(x_rod_diam_tight,200, center=true);
     } else {
-        translate([-x_to_z_offset,-41.5,x_end_base_height/2-x_rod_distance/2]) rotate(a=[-90,0,0]) pushfit_rod(x_rod_diam_tight,50);
-        translate([-x_to_z_offset,-41.5,x_end_base_height/2+x_rod_distance/2]) rotate(a=[-90,0,0]) pushfit_rod(x_rod_diam_tight,50);
+        // FIXME: Handle this case!
+        for (i=[-1,1]) translate([0,0,i*x_rod_distance/2]) rotate(a=[90,0,0]) pushfit_rod(x_rod_diam_tight,200, center=true);
     }
-
+        
+    
     // TR Nut trap
-    // Hole for the nut
-    translate(v=[0,-z_motor_ofs, -1]) poly_cylinder(h = 9.01, r = t8nut_id/2, $fn = 25);
+    translate([0,-z_motor_ofs,0]) {
+        // Hole for the nut
+        translate(v=[0,0,-1]) poly_cylinder(h = 100, r = t8nut_id/2, $fn = 25, center=true);
 
-    // Screw holes for TR nut
-    translate(v=[0,-z_motor_ofs, 0]) rotate([0, 0, -135]) translate([0, 9.5, -1]) cylinder(h = 10, r = 1.55, $fn=25);
-    translate(v=[0,-z_motor_ofs, 0]) rotate([0, 0, -135]) translate([0, -9.5, -1]) cylinder(h = 10, r = 1.55, $fn=25);
+        translate([0,0,0]) {
+            for (x=[-1,1]) for (y=[-1,1]) {
+                translate([x*11.5/2, y*11.5/2,0]) rotate([0,0,x*y*-45]) {
+                    cylinder(h = 100, r = 1.4, $fn=6, center=true); // M3 screw hole (tight)
+                    translate([0,0,8-3]) cylinder(h = 10, d = 6.3, $fn=6); // M3 nut trap
+                }
+            }
+        }
 
-    // Nut traps for TR nut screws
-    translate(v=[0,-z_motor_ofs, 0]) rotate([0, 0, -135]) translate([0, 9.5, 6]) rotate([0, 0, 0])cylinder(h = 3, r = 3.3, $fn=6);
-
-    translate(v=[0,-z_motor_ofs, 0]) rotate([0, 0, -135]) translate([0, -9.5, 6]) rotate([0, 0, 30])cylinder(h = 3, r = 3.2, $fn=6);
-    translate([-5.5,-z_motor_ofs-.2,6]) rotate([0,0,30]) cube([5,5,3]);
-    translate([-0,-z_motor_ofs-.2,6]) rotate([0,0,60]) cube([5,10,3]);
+        // Extra cutout for anti-backlash spring.  Also to remove thinwall around nut traps
+        translate([0,0,8-3]) cylinder(d=12.0, h=10);
+    }
+    
 }
 
 
@@ -80,6 +84,9 @@ module x_end_plain(){
         x_end_base();
         x_end_holes();
     }
+    
+    // Draw clearance required for Z leadscrew
+    %translate([0,-z_motor_ofs,0]) cylinder(d=t8nut_id_clearance, h=x_end_base_height);
 }
 
 x_end_plain();

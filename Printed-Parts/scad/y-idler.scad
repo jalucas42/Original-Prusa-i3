@@ -5,26 +5,56 @@
 // http://www.reprap.org/wiki/Prusa_Mendel
 // http://prusamendel.org
 
+include <common_dimensions.scad>
+
+y_idler_width = 30;
 
 module y_idler_base(){
- translate(v = [0,0,0]) cylinder(h = 19, r=8);	
- translate(v = [0,20,0]) cylinder(h = 19, r=8);
- translate(v = [0,10,9.5]) cube(size = [16,20,19], center=true);
- translate(v = [-4,10,9.5]) cube(size = [8,16+20,19], center=true);
+    hull() {
+        translate([-y_idler_width/2,0,0]) rotate([-90,0,0]) cube([y_idler_width,30,6]);
+        translate([0,y_rail_to_idler,y_rail_to_idler]) rotate([0,90,0]) cylinder(d=y_rail_to_idler*2, h=y_idler_bearing_width+6, $fn=60, center=true);
+    }
+    translate([0,y_rail_to_idler,y_rail_to_idler]) rotate([0,90,0]) cylinder(d=y_idler_bearing_od, h=y_idler_bearing_width, $fn=60, center=true);
+
+    // Rail guide + support
+    for (i=[0,1]) mirror([i,0,0]) {
+        translate([-y_idler_width/2,-z_railguide_depth,-15-8.25/2]) cube([(y_idler_width-z_railguide_keepout-1)/2,z_railguide_depth,8.25]);
+        translate([-y_idler_width/2,-z_railguide_depth-0.5,-30]) cube([(y_idler_width-z_railguide_keepout-1)/2,1,15-8.25/2]);
+        translate([-y_idler_width/2,-z_railguide_depth-0.5-4,-30]) cube([(y_idler_width-z_railguide_keepout-1)/2,4,1]);
+    }
+
 }
 
 module y_idler_holes(){
- translate(v = [0,0,-1]) cylinder(h = 120, r=1.8);	
- translate(v = [0,20,-1]) cylinder(h = 25, r=4.5);
- translate(v = [0,0,4]) cylinder(h = 11, r=12);
+
+    // Cutout for the bearing itself
+    translate([-(y_idler_bearing_width+0.5)/2,-50,y_rail_to_idler-14/2]) cube([y_idler_bearing_width+0.5, 100, 14]);
+    
+    // M3 screw to mount bearing
+    translate([0,y_rail_to_idler,y_rail_to_idler]) rotate([0,90,0]) cylinder(d=3.4, h=100, $fn=6, center=true);
+
+    // Nut trap for M3 screw (1mm wall)
+    translate([y_idler_bearing_width/2+0.25+1,y_rail_to_idler,y_rail_to_idler]) rotate([0,90,0]) cylinder(d=6.4, h=100, $fn=6, center=false);
+
+    // Nut trap for M3 screw (1mm wall)
+    translate([-(y_idler_bearing_width/2+0.25+1),y_rail_to_idler,y_rail_to_idler]) rotate([0,-90,0]) cylinder(d=6.4, h=100, $fn=60, center=false);
+
+    // M3 screw to mount to rail
+    translate([0,0,-15]) rotate([-90,-90,0]) cylinder(d=3.4, h=100, $fn=6, center=false);
+    translate([0,2,-15]) rotate([-90,-90,0]) cylinder(d=7.0, h=100, $fn=60, center=false);
+
+    // Center line markers
+    translate([0,0,0]) rotate([-90,90,0]) cylinder(d=3.4, h=100, $fn=3, center=true);
+    translate([0,0,-31]) rotate([-90,-90,0]) cylinder(d=3.4, h=100, $fn=3, center=true);
+    
 }
 
 // Final part
 module y_idler(){
- translate(v = [0,0,8])rotate([0,-90,0]) difference(){
-  y_idler_base();
-  y_idler_holes();
- }
+    difference(){
+        y_idler_base();
+        y_idler_holes();
+    }
 }
 
 y_idler();

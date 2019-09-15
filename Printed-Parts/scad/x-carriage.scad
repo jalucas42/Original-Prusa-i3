@@ -5,299 +5,165 @@
 // http://www.reprap.org/wiki/Prusa_Mendel
 // http://prusamendel.org
 
-use <bearing.scad>
-use <extruder-body.scad>
+use <polyholes.scad>
+include <common_dimensions.scad>
 
+x_carriage_width = 45; // 2*LM10UU = 58mm
+x_carriage_height = x_rod_distance + x_bearing_diam + 2*thinwall;
+x_carriage_wall_width = x_bearing_diam/2-3+6;
 
-//translate([-34,31,0]) rotate([0,180,180]) ext_body();
+beltholder_width = 18;
+beltholder_height = 2 + 9 + 2;
+
+x_carriage();
+//rotate([90,0,0]) beltholder();
 
 module x_carriage_base(){
- // Small bearing holder
- translate([-33/2,0,0]) rotate([0,0,90]) horizontal_bearing_base(1);
- // Long bearing holder
- translate([-33/2,45,0]) rotate([0,0,90]) horizontal_bearing_base(2);
- // Base plate
- translate([-33,-12,0]) cube([33,68.5,7]);
- // upper motor srew block
- translate([-19,56.8,0]) rotate([0,0,0]) cube([28.5,16.2,12]); 
- 
-    // Extruder cable tray
- difference(){   
- union(){
-    translate([-33/2 - 2.5-11.5,-17-3,3])cube([11.5,14,22]);
-    translate([-33/2 + 2.5,-17-3,3])cube([11.5,14,22]);   
-    translate([-33/2 + 2.5,-17,3])cube([3.5,9.75,22]);   
-    translate([-33/2 -2.5,-9,3])cube([5,2,22]);
-    }
-    
-    
-    
-    translate([-33/2 +7,-22,-8]) rotate([0,-25,0]) cube([5,10,22]);
-    translate([-33/2 -11.5,-22,-6.5]) rotate([0,25,0]) cube([5,10,22]);
 
+    // Bearing tubes
+    for (i=[-1,1]) translate([0,0,i*x_rod_distance/2]) rotate([0,90,0]) cylinder(d=x_bearing_diam, h=x_carriage_width, center=true, $fn=60);
     
-    translate([-33/2 -21,-22,25]) rotate([0,45,0]) cube([8,20,8]);
-    translate([-33/2 +10,-22,25]) rotate([0,45,0]) cube([8,20,8]);
+    // Front wall
+    translate([-x_carriage_width/2, -x_bearing_diam/2-6, -x_rod_distance/2]) cube([x_carriage_width, x_carriage_wall_width, x_rod_distance]);
     
-    translate([-33/2 -15,-16.5,-8])rotate([30,0,0])cube([35,9.75,25]); 
-    
-    translate([-33/2 -15,-9,10])rotate([-20,0,0])cube([35,9.75,25]); 
-    
-    //zip tie holes
-    translate([-33/2 -4.5-1.3,-24,20])rotate([0,0,0])cube([2,20,4]);
-    translate([-33/2 +2.5+1.3,-24,20])rotate([0,0,0])cube([2,20,4]);
-    
-    translate([-33/2 + 6.5-0.1,0,12]) rotate([0,90,0])cylinder(r = 11.6, h=4.2, $fn=50);
-    
-    translate([-33/2 -6.5 - 4.1,0,12]) rotate([0,90,0])cylinder(r = 11.6, h=4.2, $fn=50);
-    
-    //right cutout
-    translate([-10,-30,0]) translate([0,-11.5,-1]) rotate([0,0,45]) translate([0,-15,0]) cube([30,30,34]);
-
-      
- }   
-    
- // Belt holder base
- translate([-42.5,20,0]) cube([52,16,7]);
- 
- translate([-16.5-12,24.5,0])cylinder(r=4.5, h=14, $fn=25);
- translate([-16.5+12,24.5,0])cylinder(r=4.5, h=14, $fn=25); 
- 
- translate([-16.5-12,24.5,14])cylinder(r1=4.5, r2=3.8, h=2, $fn=25);
- translate([-16.5+12,24.5,14])cylinder(r1=4.5, r2=3.8, h=2, $fn=25);
- 
-  // Endstop trigger nipple
-     difference(){  
-     union(){
-       translate([-2.5,-16,0]) cube([12,5.8,12]);
-       translate([-2.2,-12,0])cylinder(r=4.6, h=12, $fn=6); 
-       }
-       translate([5,-17,-1]) rotate([0,45,0]) cube([10,10,10]);
-       translate([-16.8,-22.6,-5]) rotate([45,45,0]) cube([10,15,10]);
-       translate([-4,-20,0]) rotate([45,-45,0]) cube([15,15,10]);
-       
-     }
-     
- // Belt Insert R
-    difference(){
-    union(){
-    translate([2,27,0]) cube([10,6,15]);
-    translate([2,27-2.3-4.5,0]) cube([10,4.5,15]);
-    translate([-0.5,27,0]) cube([8,7,2]);
-    }
-    translate([-3,25,5.5]) rotate([0,0,-40]) cube([5,5.5,10]);
+    // Belt slot block
+    //translate([-x_carriage_width/2, -3, 0]) cube([18, 7, x_rod_distance/2]);
 }
-    
- // Belt Insert L
-difference(){
-    union(){
- translate([-33,3,00]){scale([-1,1,1]){
- translate([0,27,0]) cube([12.5,3,15]);
- translate([2,27-7.5-2.3,0]) cube([12.5,7.5,15]);
- translate([-0.5,27,0]) cube([8,7,2]);
- }}
- 
- }
- 
- translate([-36.5,27.7,5.5]) rotate([0,0,-55]) cube([5,5.5,10]);
- 
- }
-    
-}
-
-
 
 module x_carriage_holes(){
- // Small bearing holder holes cutter
- translate([-33/2,0,0]) rotate([0,0,90]) horizontal_bearing_holes(1);
- // Long bearing holder holes cutter
- translate([-33/2,45,0]) rotate([0,0,90]) horizontal_bearing_holes(2);
-  
-    // Extruder mounting holes
-  translate([-16.5+12,24.5,-1])cylinder(r=1.8, h=20, $fn=25);
-  translate([-16.5+12,24.5,-0.1])cylinder(r1=2.1,r2=1.8, h=0.5, $fn=25);
-  translate([-16.5+12,24.5,12])cylinder(r=5.8/2, h=20, $fn=25); 
-  translate([-16.5-12,24.5,-1])cylinder(r=1.8, h=20, $fn=25);
-  translate([-16.5-12,24.5,-0.1])cylinder(r1=2.1,r2=1.8, h=0.5, $fn=25);
-  translate([-16.5-12,24.5,12])cylinder(r=5.8/2, h=20, $fn=25); 
-   
-  // Carriage alignment
-  // translate([-33,24.5-6-0.25,-0.01])cube([33,3.5,1.25]); 
-   
-  // Cables keepout
-  translate([0,10+3,-2])cube([5,10,5]);  
     
-  // Carriage slimer
-    translate([-55.5+3,19,-1])cube([10,40,30]);
-    translate([+12.5-3,19,-1])cube([10,40,30]);
-    
-    translate([+12.5-3.5-2,19,-1])rotate([0,90-65,0])cube([10,55,30]);
-    translate([-55.5+6.7+2,19,-10])rotate([0,-90+65,0])cube([10,40,30]);
-    
-  // Filament hole
-   translate([-33/2,7,1]) rotate([-15,0,0])cylinder(r=1.52, h=40, $fn=10); 
-   
-}
+    // PTFE bearing cutouts (1 top center, 2 on bottom)
+    for (z=[-1,1]) {
+        translate([-12/2,0,z*x_rod_distance/2]) rotate([0,90,0]) ptfe_bearing_holes(length=12, bearing_od=x_bearing_diam);        
+        for (i=[0,1]) mirror([i,0,0]) translate([-x_carriage_width/2+2,0,z*x_rod_distance/2]) rotate([0,90,0]) ptfe_bearing_holes(length=12, bearing_od=x_bearing_diam);
+    }    
 
-module x_carriage_fancy(){
- // Top right corner
- translate([11.5,8,0]) translate([0,45+11.5,-1]) rotate([0,0,45]) translate([0,-15,0]) cube([30,30,20]);
- // Belt Smooth insert
- translate([0,36.5,23.5]) rotate([45,0,0]) translate([0,-15,0]) cube([20,10,10]);
- translate([-52.9,36.5+3,23.5]) rotate([45,0,0]) translate([0,-15,0]) cube([20,10,10]);   
+    //%rotate([90,0,0]) cylinder(d=x_idler_bearing_od, h=6, center=true); // Idler bearing (and stepper pinion)
+    //%translate([-x_carriage_width/2, -3, x_idler_bearing_od/2]) cube([x_carriage_width, 6, 1]); // Top belt
+    //translate([-x_carriage_width/2-1, -3, x_idler_bearing_od/2-1.1]) cube([10, 7.001, 2.1]); // Belt slot
     
- // Bottom ĺeft corner
- translate([-34,2,0]) translate([2,-11.5,-1]) rotate([0,0,-145]) translate([0,-15,0]) cube([30,30,34]);
- // Top left corner
- translate([-33-13.5,-5,0]) translate([0,45+11.5,-1]) rotate([0,0,135]) translate([0,-15,0]) cube([30,30,20]);	
- translate([-23,72,14]) rotate([0,45,0]) translate([0,-15,0]) cube([5,25,5]);	   
- translate([-23,84,21]) rotate([45,0,0]) translate([0,-15,0]) cube([45,5,5]);	   
+    /*hull() {
+        translate([-x_carriage_width/2-1+ 7, -3, x_idler_bearing_od/2-1.1+2.1/2+0]) rotate([-90,0,0]) cylinder(d=2.1, h=7.001, $fn=30); // Belt slot
+        translate([-x_carriage_width/2-1+13, -3, x_idler_bearing_od/2-1.1+2.1/2+0]) rotate([-90,0,0]) cylinder(d=7, h=7.001, $fn=30); // Belt slot
+    }*/
+    
+    //translate([-x_carriage_width/2-1+13, -x_bearing_diam/2, x_idler_bearing_od/2-1.1+2.1/2+0]) rotate([-90,0,0]) cylinder(d=3.5, h=50, $fn=6, center=true); // M3 hole
+    //translate([-x_carriage_width/2-1+13, -3-2.5, x_idler_bearing_od/2-1.1+2.1/2+0]) rotate([-90,0,0]) cylinder(d=6.3, h=50, $fn=6, center=false); // M3 hole
+    //translate([-x_carriage_width/2-1+13, -x_bearing_diam/2-0.001, x_idler_bearing_od/2-1.1+2.1/2+0]) rotate([-90,0,0]) cylinder(d=7.0, h=3, $fn=30, center=false); // M3 hole
 
-    translate([-8,64,5]) rotate([0,0,0]) cylinder(r=6, h=22, $fn=6); 
-    translate([-10,64,5]) rotate([0,0,0]) cylinder(r=6, h=22, $fn=6); 
-    
-}
+    // Cutout for bottom belt
+    translate([0.001,0,-x_idler_bearing_od/2]) cube([x_carriage_width+0.002, 10, 4], center=true);
 
-module cable_tray(){
-    
-    //Left cable tray
-   translate([-38.9,11,0]) cube([8,2,15]); 
-    translate([-38.9,5.5,0]) cube([8,2,15]); 
-    
-    //Right cable tray
-    translate([-2,5.5,0]) cube([9.45,2,15]);
-    translate([-2,11,7]) cube([9.45,2,8]);
-    
-    translate([-31,11.5,7]) cube([30,2,10]);
+    // Slider slot for belt holders
+    translate([-x_carriage_width/2-0.001,-2-3,-beltholder_height/2+x_idler_bearing_od/2-0.25]) cube([x_carriage_width+0.002, 2.001, beltholder_height+0.5]);
+
+    for (i=[-1,1]) {
+        // M3 slot
+        hull() {
+            translate([i*x_carriage_width/2-0.001-i*10,-2-3+0.001,x_idler_bearing_od/2]) rotate([90,0,0]) cylinder(d=3.4, h=10, $fn=30);
+            translate([i*x_carriage_width/2-0.001-i*18,-2-3+0.001,x_idler_bearing_od/2]) rotate([90,0,0]) cylinder(d=3.4, h=10, $fn=30);
+        }
         
-    difference(){ 
-    translate([0,11,0]) cube([7.45,12,7]);
-    translate([0,6,1])rotate([-30,0,0]) cube([5.5,12,7]);
-    translate([0,3.5,6])rotate([-60,0,0]) cube([5.5,12,7]);
-    translate([0,10+3,-1])cube([5.5,11,6]);    
-    }
-    
-    }
-
-
-
-module upper_ziptie_holder()
-    {
-        
-        // body
-        difference(){
-            translate([-19,18,7]) cube([5,15,9]);   
-            translate([-20,29,10]) rotate([45,0,0])cube([10,10,10]);   
-            translate([-20,29,10]) cube([7,5,20]);   
+        // M3 nut trap slot
+        hull() {
+            translate([i*x_carriage_width/2-0.001-i*10,-2-3-3.0+0.001,x_idler_bearing_od/2]) rotate([90,0,0]) cylinder(d=6.4, h=10, $fn=6);
+            translate([i*x_carriage_width/2-0.001-i*18,-2-3-3.0+0.001,x_idler_bearing_od/2]) rotate([90,0,0]) cylinder(d=6.4, h=10, $fn=6);
         }
 
-        difference(){
-            union(){    
-                difference(){
-                    translate([-23,17.5,7]) cube([13,5,17]);
-                    translate([-23,19,6]) rotate([0,0,45]) cube([5,5,19]);    
-                    translate([-10,19,6]) rotate([0,0,45]) cube([5,5,19]);   
-                    translate([-15,21,17])rotate([0,0,0])cube([5,2,5]);
-                    translate([-23,21,17])rotate([0,0,0])cube([5,2,5]);
-                    }    
-                difference(){
-                    translate([-23,11.5,15]) cube([13,7,9]);  
-                    #translate([-30,15.5,14.8]) rotate([0,90,0]) cylinder(r=2, h=22, $fn=30); 
-                    translate([-24,11,18]) rotate([45,0,0]) cube([20,10,10]); 
-                    }
-                }
-
-            //zip ties
-            translate([-20,5,17])rotate([0,0,0])cube([2,20,5]);
-            translate([-15,5,17])rotate([0,0,0])cube([2,20,5]);    
-            
-            // corners    
-            translate([-28,12,25]) rotate([0,45,0]) cube([5,15,5]); 
-            translate([-12,12,25]) rotate([0,45,0]) cube([5,15,5]); 
+        // M3 nut cutout to allow removing beltholder pieces without completely removing screw.
+        translate([i*x_carriage_width/2-0.001-i*18,0,x_idler_bearing_od/2]) rotate([90,0,0]) cylinder(d=6.4, h=100, $fn=6, center=true);
+    }
+    
+    translate([0,-x_bearing_diam/2-6,0]) for (x=[-1,1]) for (y=[-1,1]) translate([x*31/2,0,y*31/2]) {
+        translate([0,8,0]) rotate([90,0,0]) cylinder(d=3.4, h=20, center=false, $fn=30);
+        translate([0,3+2,0]) hull() {
+            rotate([90,0,0]) cylinder(d=6.4, h=3, center=false, $fn=6);        
+            translate([x*20,0,0]) rotate([90,0,0]) cylinder(d=6.4, h=3, center=false, $fn=6);        
         }
     }
 
+    //%translate([0,-3,0]) rotate([-90,0,0]) bolt();
+}
 
-module final_cutout(){
-    
-    translate([-19,-16.4,13]) rotate([-45,0,0]) cube([5,5,5]);
-    translate([-43,0,16]) rotate([0,45,0]) cube([5,15,5]);
-    translate([5,0,16]) rotate([0,45,0]) cube([5,15,5]);
-    
-    translate([-4.5,0,18.5]) rotate([0,45,0]) cube([5,15,5]);
-    translate([-34.5,0,18.5]) rotate([0,45,0]) cube([5,15,5]);
-    
-   
-    translate([-19,7,13.5]) rotate([-15,0,0]) cube([5,5,50]);      
-    }
-
-// Final part
 module x_carriage(){
- difference(){
-      union(){
-         difference()
-     {
+    difference(){
         x_carriage_base();
-      x_carriage_holes();
-      x_carriage_fancy();
-     }
-    cable_tray();
-    upper_ziptie_holder();
+        x_carriage_holes();
     }
-   
-    final_cutout();
- }
-}
-
-// belt keepout
-//%translate([-42-9,30-16,7])cube([70,16,10]);
-
-difference(){
-union(){
-    x_carriage();
-    //translate([7.3,-16,0]) 
-    //translate([2,-19,0]) cube([7.5,12,0.5]);        
-    //translate([5,-16,0]) cube([4.5,1,5]);        
-    //translate([5,-11.2,0]) cube([4.5,1,5]);        
-    //translate([5.5,7.5,0]) cube([4,3.5,0.5]);    
-}
-translate([2.5,67.5,-50]) rotate([0,0,0]) cylinder(r=1.8, h=100, $fn=30);
-#translate([2.5,67.5,-0.1])cylinder(r1=2.1,r2=1.8, h=0.5, $fn=25);
-translate([2.5,67.5,5]) rotate([0,0,0]) cylinder(r=3.2, h=8, $fn=30);
-translate([0,21,0]) rotate([0,90,0]) cylinder(r=5.2, h=5.5, $fn=25);
-//translate([2 ,-5,-5])cube([20,50,30]);
-
-translate([-36.5,21.25,1.5]) cube([0.1,4.5,13.3]);      
-translate([-38.6,21,1.5]) cube([0.1,6,13.3]);      
-translate([-41,21,1.5]) cube([0.1,6,13.3]);      
-
-
-translate([3.5,21,6]) cube([0.1,2,8.8]);      
-translate([5,21,6]) cube([0.1,3,8.8]);      
-translate([6.8,21,1.5]) cube([0.1,3,13.3]);      
-translate([8.5,21,5]) cube([0.1,3,9.8]);      
-
-    translate([5,-15.4,-1]) rotate([0,45,0]) cube([0.3,4.6,8]);        
-    translate([7.45,6,-1]) cube([0.5,1,5]);        
-    translate([7.45,11.5,-1]) cube([0.5,1.8,5]);        
     
-    translate([5,-16.4,-1]) rotate([0,45,0]) cube([0.3,0.5,8]);        
-    translate([5,-10.3,-1]) rotate([0,45,0]) cube([0.3,0.5,8]);    
-    translate([6,-16.5,-1]) cube([1,0.5,5]);        
-    translate([3,-16.5,-1]) cube([2,0.5,5]);  
-    translate([6,-10.2,-1]) cube([1,0.5,5]);        
-    translate([3,-10.2,-1]) cube([2,0.5,5]);  
-    translate([6,7.5,-1]) cube([1,0.5,5]);  
-    translate([6,10.5,-1]) cube([1,0.5,5]);  
+    %translate([-x_carriage_width/2-1,-3,x_idler_bearing_od/2]) beltholder();
+}
 
-//half cut
-//translate([-50 ,-50,8])cube([100,100,30]);
+module ptfe_bearing_holes(rod_diam=10, tightness=0.0, length=25, ptfe_od=4.0, num_sections=7, bearing_od=19, clearance=1.5) {
+    render() {
+        $fn = 60;
+        rod_diam_tight = rod_diam - tightness;
+        translate([0,0,0]) cylinder( d=rod_diam+2, h=length+300, center=true );
+        for (i=[0:num_sections-1]) rotate([0,0,i*360/num_sections]) {
+            //%translate([rod_diam_tight/2+ptfe_od/2,0,-1]) cylinder( d=ptfe_od, h=length+2 );
+            translate([rod_diam_tight/2+ptfe_od/2,0,]) cylinder( d=ptfe_od, h=length );
+            intersection() {
+                translate([bearing_od/2-3/2,-3/2,]) cube([3,3,length]);
+                cylinder(d=bearing_od+clearance, h=length, $fn=60);
+            }
+        }
 
+        // Cut clearance hole around bearing so it can flex
+        translate([0,0,0]) difference() {
+            cylinder(d=bearing_od+2*clearance, h=length, $fn=60);
+            cylinder(d=bearing_od, h=length, $fn=60);
+        }
+    }        
+}
+
+module nema17_holes() {
+    for (x=[-1,1]) for (y=[-1,1]) translate([x*31/2,y*31/2,0]) cylinder(d=3.4, h=20, center=false);
+}
+
+//knurled_surface( x_len=10, y_len=10 );
+module knurled_surface( x_len=10, y_len=10, cube_side=2 ) {
+    knurl_diam = 3;
+    //rotate([45,35.26,45]) cube([cube_side,cube_side,cube_side], center=true);
+    
+    sqrt_2 = sqrt(2);
+    cos_180_4 = cos(180/4);
+
+    max_x = ceil(x_len/2);
+    max_y = ceil(y_len/2);
+    
+    //translate([-2,-1,-2]) cube([11,11,2.001]);
+    translate([knurl_diam/2,knurl_diam/2,0]) difference() {
+        union() {
+            for (y=[0:max_x-1]) for (x=[0:max_y-1]) {
+                translate([((x+0)*knurl_diam)*cos_180_4*sqrt_2,(y*knurl_diam+0)*cos_180_4*sqrt_2,0]) rotate([0,0,0]) cylinder(d1=knurl_diam, d2=0.001, h=knurl_diam/2, $fn=4);
+                translate([((x+0.5)*knurl_diam)*cos_180_4*sqrt_2,((y+0.5)*knurl_diam)*cos_180_4*sqrt_2,0]) rotate([0,0,0]) cylinder(d1=knurl_diam, d2=0.001, h=knurl_diam/2, $fn=4);
+            }
+        }
+        translate([-50,-50,knurl_diam*0.3]) cube([100,100,100]);
+    }
 }
 
 
-// Cable hole vis
-//%translate([-33/2 - 2.5,-17,1])cube([5,25,30]);
+module beltholder() {
+    translate([0,0,-beltholder_height/2]) {
+        
+        difference() {
+            translate([0, -2, 0]) cube([18, 6+2, beltholder_height]);
 
+            translate([-1, 0, beltholder_height/2-2.1/2]) cube([10, 7.001, 2.1]); // Belt slot
+            
+            hull() {
+                translate([-1+ 7, 0, beltholder_height/2]) rotate([-90,0,0]) cylinder(d=2.1, h=7.001, $fn=30); // Belt slot
+                translate([-1+13, 0, beltholder_height/2]) rotate([-90,0,0]) cylinder(d=9, h=7.001, $fn=30); // Belt slot
+            }
 
+            translate([-1+13, 0, beltholder_height/2]) rotate([-90,0,0]) cylinder(d=3.3, h=100, $fn=30, center=true); // Belt slot
+        }
 
+        difference() {
+            translate([-1+13, 0, beltholder_height/2]) rotate([-90,0,0]) cylinder(d=6, h=6-3, $fn=30); // Belt slot
+            translate([-1+13, 0, beltholder_height/2]) rotate([-90,0,0]) cylinder(d=3.3, h=100, $fn=30, center=true); // Belt slot
+            
+        }
+    }
+}
