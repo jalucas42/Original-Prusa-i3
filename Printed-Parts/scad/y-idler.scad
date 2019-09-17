@@ -11,16 +11,16 @@ y_idler_width = 30;
 
 module y_idler_base(){
     hull() {
-        translate([-y_idler_width/2,0,0]) rotate([-90,0,0]) cube([y_idler_width,30,6]);
+        translate([-y_idler_width/2,0,0]) rotate([-90,0,0]) cube([y_idler_width,x_beam_width,6]);
         translate([0,y_rail_to_idler,y_rail_to_idler]) rotate([0,90,0]) cylinder(d=y_rail_to_idler*2, h=y_idler_bearing_width+6, $fn=60, center=true);
     }
     translate([0,y_rail_to_idler,y_rail_to_idler]) rotate([0,90,0]) cylinder(d=y_idler_bearing_od, h=y_idler_bearing_width, $fn=60, center=true);
 
     // Rail guide + support
     for (i=[0,1]) mirror([i,0,0]) {
-        translate([-y_idler_width/2,-z_railguide_depth,-15-8.25/2]) cube([(y_idler_width-z_railguide_keepout-1)/2,z_railguide_depth,8.25]);
-        translate([-y_idler_width/2,-z_railguide_depth-0.5,-30]) cube([(y_idler_width-z_railguide_keepout-1)/2,1,15-8.25/2]);
-        translate([-y_idler_width/2,-z_railguide_depth-0.5-4,-30]) cube([(y_idler_width-z_railguide_keepout-1)/2,4,1]);
+        translate([-y_idler_width/2,-z_railguide_depth,-x_beam_width/2-x_railguide_width/2]) cube([(y_idler_width-z_railguide_keepout-1)/2,z_railguide_depth,x_railguide_width]);
+        translate([-y_idler_width/2,-z_railguide_depth-0.5,-x_beam_width]) cube([(y_idler_width-z_railguide_keepout-1)/2,1,x_beam_width/2-x_railguide_width/2]);
+        translate([-y_idler_width/2,-z_railguide_depth-0.5-4,-x_beam_width]) cube([(y_idler_width-z_railguide_keepout-1)/2,4,1]);
     }
 
 }
@@ -40,12 +40,12 @@ module y_idler_holes(){
     translate([-(y_idler_bearing_width/2+0.25+1),y_rail_to_idler,y_rail_to_idler]) rotate([0,-90,0]) cylinder(d=6.4, h=100, $fn=60, center=false);
 
     // M3 screw to mount to rail
-    translate([0,0,-15]) rotate([-90,-90,0]) cylinder(d=3.4, h=100, $fn=6, center=false);
-    translate([0,2,-15]) rotate([-90,-90,0]) cylinder(d=7.0, h=100, $fn=60, center=false);
+    translate([0,0,-x_beam_width/2]) rotate([-90,-90,0]) cylinder(d=3.4, h=100, $fn=6, center=false);
+    translate([0,2,-x_beam_width/2]) rotate([-90,-90,0]) cylinder(d=7.0, h=100, $fn=60, center=false);
 
     // Center line markers
     translate([0,0,0]) rotate([-90,90,0]) cylinder(d=3.4, h=100, $fn=3, center=true);
-    translate([0,0,-31]) rotate([-90,-90,0]) cylinder(d=3.4, h=100, $fn=3, center=true);
+    translate([0,0,-x_beam_width-1]) rotate([-90,-90,0]) cylinder(d=3.4, h=100, $fn=3, center=true);
     
 }
 

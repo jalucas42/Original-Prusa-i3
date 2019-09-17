@@ -8,11 +8,11 @@ use <z-axis-top.scad>
 
 include <common_dimensions.scad>
 
-%translate([z_motor_ofs-15,-z_rod_to_rail-30,]) cube([30,30,200]);
+%translate([-z_beam_width/2+z_motor_ofs+z_beam_motor_ofs,-z_rod_to_rail-z_beam_width,]) cube([z_beam_width,z_beam_width,110-z_top_height]);
 
 xz_right();
 translate([150,0,0]) xz_left();
-translate([75,-x_to_z_offset,15+0+x_end_base_height/2]) rotate([180,0,0]) x_carriage();
+translate([60,-x_to_z_offset,15+0+x_end_base_height/2]) rotate([180,0,0]) x_carriage();
 
 module xz_left() {
     mirror([0,0,1]) z_bottom_right();

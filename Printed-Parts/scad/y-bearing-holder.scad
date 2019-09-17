@@ -16,7 +16,7 @@ module y_bearing_holder_holes() {
     // Cut off top of rod slot slightly above center point to give some hold
     //translate([-y_bearing_holder_width/2,-y_bearing_holder_depth/2-1,y_bearing_holder_height]) cube([y_bearing_holder_width,y_bearing_holder_depth+2,20]);
 
-    translate([0,y_bearing_holder_depth/2-2,y_bearing_holder_rod_ofs]) rotate([90,0,0]) ptfe_bearing_holes(length=y_bearing_holder_depth-4, bearing_od=y_bearing_od);   ;
+    translate([0,y_bearing_holder_depth/2-2,y_bearing_holder_rod_ofs]) rotate([90,0,0]) ptfe_bearing_holes(length=y_bearing_holder_depth-4, bearing_od=y_bearing_od);
 
     // Bearing cutout
     //translate([0,-1-y_bearing_holder_depth/2,y_bearing_holder_rod_ofs]) rotate([-90,0,0]) cylinder(d=y_bearing_od, h=y_bearing_holder_depth+2);

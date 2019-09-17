@@ -5,38 +5,43 @@
 // http://www.reprap.org/wiki/Prusa_Mendel
 // http://prusamendel.org
 
-//use <bearing.scad>
 use <polyholes.scad>
+use <ptfe_bearing_holes.scad>
 
 include <common_dimensions.scad>
 
 module x_end_base(){
     
     // Main block
-    translate(v=[-x_end_base_depth/2-x_to_z_offset,-x_end_base_width+(z_bearing_diam/2)+thinwall,0]) cube(size = [x_end_base_depth,x_end_base_width,x_end_base_height], center = false);
+    translate(v=[-x_end_base_depth/2-x_to_z_offset,-x_end_base_width+(z_bearing_size/2),0]) cube(size = [x_end_base_depth,x_end_base_width,x_end_base_height], center = false);
     //translate(v=[-15,-9.25,x_end_base_height/2]) cube(size = [17,39,x_end_base_height-10], center = true);
     
     // Bearing holder
     {
         //vertical_bearing_base();	
-        translate(v=[-2-z_bearing_size/4,0,x_end_base_height/2]) cube(size = [4+z_bearing_size/2,z_bearing_size,x_end_base_height], center = true);
+        translate(v=[-z_rod_to_base/2,0,x_end_base_height/2]) cube(size = [z_rod_to_base,z_bearing_size,x_end_base_height], center = true);
         cylinder(h = x_end_base_height, r=z_bearing_size/2, $fn = 90);
     }
 
     // T8 Nut trap
-    {
+    hull() {
         // Cylinder
         nut_trap_diam = 25;
-        translate(v=[0,-z_motor_ofs,0]) poly_cylinder(h = 8, r=nut_trap_diam/2, $fn=25);
-        translate(v=[-nut_trap_diam/2,-z_motor_ofs,0]) cube([nut_trap_diam/2,nut_trap_diam/2,8]);
+        translate(v=[0,-z_motor_ofs,0]) cylinder(h = 8, r=nut_trap_diam/2, $fn=60);
+        translate(v=[-z_rod_to_base,-z_motor_ofs,0]) cube([z_rod_to_base,x_end_base_width,8]);
+        cylinder(h = 8, r=z_bearing_size/2, $fn = 90);
     }    
 }
 
 module x_end_holes(){
     {
-        //vertical_bearing_holes();
-        translate(v=[0,0,-1]) poly_cylinder(h = x_end_base_height+2, r=(z_bearing_diam/2)+0.1);
-        rotate(a=[0,0,-40]) translate(v=[z_bearing_diam/2-2.9,-0.5,0.5]) cube(size = [thinwall*2,1,x_end_base_height]);       
+        end_spacing = 2.0;
+        translate([0,0,end_spacing]) ptfe_bearing_holes(length=z_bearing_length-end_spacing*2, bearing_od=z_bearing_diam);
+        translate([0,0,x_end_base_height-z_bearing_length+end_spacing]) ptfe_bearing_holes(length=z_bearing_length-end_spacing*2, bearing_od=z_bearing_diam);
+        
+        //// Z bearing holder + stress relief cutout
+        //translate(v=[0,0,-1]) poly_cylinder(h = x_end_base_height+2, r=(z_bearing_diam/2)+0.1);
+        //rotate(a=[0,0,-40]) translate(v=[z_bearing_diam/2-2.9,-0.5,0.5]) cube(size = [thinwall*2,1,x_end_base_height]);       
     }
 
     // Stress relief (for idler bearing tightening)
@@ -80,13 +85,14 @@ module x_end_holes(){
 
 // Final prototype
 module x_end_plain(){
+    //render() 
     difference(){
         x_end_base();
         x_end_holes();
     }
     
     // Draw clearance required for Z leadscrew
-    %translate([0,-z_motor_ofs,0]) cylinder(d=t8nut_id_clearance, h=x_end_base_height);
+    %translate([0,-z_motor_ofs,8]) color("red",0.25) cylinder(d=z_leadscrew_clearance, h=x_end_base_height-8);
 }
 
 x_end_plain();

@@ -32,32 +32,40 @@ x_rod_diam_tight = x_rod_diam - 0.07; // Adjust tightness based on test prints
 x_bearing_diam = 19.0; // LM10UU
 x_bearing_length = 29.0; // LM10UU
 
-z_bottom_wall_width = 4;
+z_bottom_wall_width = 5;
 z_bottom_width = 43 + 2*z_bottom_wall_width;
 z_bottom_height = 43;
 
-z_top_wall_width = z_bottom_wall_width;
+z_top_wall_width = 5;
 z_top_width = 30;
 z_top_height = 22;
 z_top_generate_rod_holder = false; // Optionally generate a Z rod holder, which limits the length of the Z rod, or no holder, which allows a longer Z rod to be used.
 
-z_rod_to_rail = z_bottom_wall_width + 43/2 + 3; // Z-rod center (and X-axis) offset from 3030 rail front face - dictated by NEMA17 stepper center (44mm / side)
-z_rod_to_base = t8nut_id_clearance/2 + 1; // Z-rod center offset from x-end front face
+// Outer diam of Z bearing holders in X base.  
 
-z_motor_ofs = z_bearing_diam/2 + thinwall + t8nut_id_clearance/2 + 1; //17; // Z-motor offset from Z-rod (center-to-center) - both are aligned with X axis
+//z_bearing_size = z_bearing_diam + 2 * thinwall; // For discrete bearings, include wall to hold bearings
+z_bearing_size = z_bearing_diam; // For PTFE bearings, don't need supportive walls
 
-z_beam_motor_ofs = 10; // Z-rod center offset from Z beam center
+// Clearance required Z leadscrew to avoid interference.  Potential interference from leadscrew nut, 
+// leadscrew anti-backlash spring/nut, motor/leadscrew coupler, etc.
+z_leadscrew_clearance = 25+3; // Leadscrew coupler is 25mm
+
+z_motor_ofs = z_bearing_size/2 + z_leadscrew_clearance/2; //17; // Z-motor offset from Z-rod (center-to-center) - both are aligned with X axis
+
 
 x_end_belt_hole_height = x_rod_distance-x_rod_diam-2*thinwall; //31-5; // To fit between NEMA17 mounting screws
-x_end_belt_hole_width = x_idler_bearing_width+1; // x_end_base_depth-2*thinwall; // 10;
+x_end_belt_hole_width = x_idler_bearing_width+0.5; // x_end_base_depth-2*thinwall; // 10;
 x_end_base_height = x_rod_distance + x_rod_diam + 2*thinwall; //58 + 10;
-x_end_base_depth = 18; // x_end_belt_hole_width + 2*thinwall; //18; //17; // NOTE: Manually adjust to prevent X rod cutout interference with Z linear bearing cutouts
-x_end_base_width = x_bearing_diam + 2*thinwall + 1 + 8+4;
+x_end_base_depth = x_end_belt_hole_width + 2*thinwall; //18; //17; // NOTE: Manually adjust to prevent X rod cutout interference with Z linear bearing cutouts
+x_end_base_width = z_bearing_size + z_leadscrew_clearance/2;
 x_end_idler_open_end = true; // Specify whether x-idler end has closed ends with tension screws, or straight rod cutouts to allow longer rods.
+
+z_rod_to_base = z_leadscrew_clearance/2; // Z-rod center offset from x-end front face
+z_rod_to_rail = z_rod_to_base + x_end_base_depth + 3; // Z-rod center (and X-axis) offset from 3030 rail front face - dictated by NEMA17 stepper center (44mm / side)
+z_beam_motor_ofs = 43+1-z_bottom_wall_width-25; // Z-rod center offset from Z beam center
 
 x_to_z_offset = x_end_base_depth/2+z_rod_to_base; // 15; // Used to offset the X pushrods/belt from the Z rod.
 
-z_bearing_size = z_bearing_diam + 2 * thinwall;
 
 y_rod_diam = 10.0;
 y_rod_diam_tight = y_rod_diam - 0.0; // Adjust tightness based on test prints
@@ -95,6 +103,12 @@ y_bearing_holder_height = y_bearing_holder_rod_ofs+y_bearing_od*0.25;
 y_rail_to_plate = y_rod_to_rail + y_bearing_holder_rod_ofs; // Offset from top of 3030 rail to bottom of mounting plate
 y_rail_to_idler = y_rail_to_plate - y_idler_to_plate; // Offset from top of 3030 rail to center of idler (and stepper)
 
-z_railguide_width = 8.30; // 3030
+z_beam_width = 25;
+z_railguide_width = 6.5; //8.30; // 3030
 z_railguide_depth = 2.0;
 z_railguide_keepout = 12; // 3030 dropin nut is 11, plus margin
+
+x_beam_width = 25;
+x_railguide_width = 6.5; //8.30; // 3030
+x_railguide_depth = 2.0;
+x_railguide_keepout = 12; // 3030 dropin nut is 11, plus margin

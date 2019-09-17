@@ -7,18 +7,18 @@
 
 include <common_dimensions.scad>
 
-y_idler_width = 30;
+y_idler_width = 25;
 
 module y_motor_base(){
 
     hull() {
-        translate([-y_idler_width/2,0,-30]) rotate([0,0,0]) cube([y_idler_width,6,30]);
+        translate([-y_idler_width/2,0,-x_beam_width]) rotate([0,0,0]) cube([y_idler_width,6,x_beam_width]);
         translate([-y_idler_width/2,6,-43/2+y_rail_to_idler]) cube([6,43,43]);
     }
         %translate([0,43/2+6,y_rail_to_idler]) rotate([0,90,0]) cylinder(d=y_idler_bearing_od, h=y_idler_bearing_width, $fn=60, center=true);
 
     // Rail guide + support
-    translate([-y_idler_width/2,-z_railguide_depth,-15-8.25/2]) cube([y_idler_width,z_railguide_depth,8.25]);    
+    translate([-y_idler_width/2,-z_railguide_depth,-x_beam_width/2-8.25/2]) cube([y_idler_width,z_railguide_depth,8.25]);    
     /*for (i=[0,1]) mirror([i,0,0]) {
         translate([-y_idler_width/2,-z_railguide_depth,-15-8.25/2]) cube([(y_idler_width-z_railguide_keepout-1)/2,z_railguide_depth,8.25]);
         translate([-y_idler_width/2,-z_railguide_depth-0.5,-30]) cube([(y_idler_width-z_railguide_keepout-1)/2,1,15-8.25/2]);
@@ -28,7 +28,7 @@ module y_motor_base(){
 }
 
 module y_motor_holes(){
-    translate([-15-0.001,6+43/2,y_rail_to_idler]) rotate([0,90,0]) {
+    translate([-y_idler_width/2-0.001,6+43/2,y_rail_to_idler]) rotate([0,90,0]) {
         for (x=[-1,1]) for (y=[-1,1]) {
             translate([x*31/2,y*31/2,0]) cylinder(d=3.4, h=200, center=false);
             translate([x*31/2,y*31/2,6]) cylinder(d=6.5, h=200, center=false);
@@ -54,9 +54,9 @@ module y_motor_holes(){
     }
     
     // Rail guide nut cutouts
-    translate([0,0,-15]) rotate([90,0,0]) cylinder(h = z_railguide_depth+0.001, d2=z_railguide_keepout+2, d1=z_railguide_keepout, $fn=12);    
-    translate([0,0,-15]) rotate([-90,0,0]) cylinder(h = 100, d=3.4, $fn=6);    
-    translate([0,3,-15]) rotate([-90,0,0]) cylinder(h = 100, d=6.4, $fn=12);    
+    translate([0,0,-x_beam_width/2]) rotate([90,0,0]) cylinder(h = z_railguide_depth+0.001, d2=z_railguide_keepout+2, d1=z_railguide_keepout, $fn=12);    
+    translate([0,0,-x_beam_width/2]) rotate([-90,0,0]) cylinder(h = 100, d=3.4, $fn=6);    
+    translate([0,3,-x_beam_width/2]) rotate([-90,0,0]) cylinder(h = 100, d=6.4, $fn=12);    
     
     rotate([0,0,0]) cylinder(h = 100, d = 1, $fn = 4, center = true);
 }

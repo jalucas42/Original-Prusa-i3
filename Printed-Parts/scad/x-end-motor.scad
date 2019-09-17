@@ -11,12 +11,12 @@ include <common_dimensions.scad>
 
 module x_end_motor_base(){
     x_end_idler_base();
-    translate(v=[-x_end_base_depth/2-x_to_z_offset,(z_bearing_diam/2)+thinwall,0]) cube(size = [17,44,x_end_base_height], center = false);
+    translate(v=[-x_end_base_depth/2-x_to_z_offset,z_bearing_size/2,0]) cube(size = [17,44,x_end_base_height], center = false);
     
 }
 
 module x_end_motor_endstop_base(){
-    translate([-x_end_base_depth/2-x_to_z_offset,-x_end_base_width+z_bearing_diam/2+thinwall,x_end_base_height]) {
+    translate([-x_end_base_depth/2-x_to_z_offset,-x_end_base_width+z_bearing_size/2,x_end_base_height]) {
         difference(){
             // Base block
             cube([x_end_base_depth,18.2,4]);
@@ -27,7 +27,7 @@ module x_end_motor_endstop_base(){
 }
 
 module x_end_motor_endstop_holes(){
-    translate([-x_end_base_depth/2-x_to_z_offset,-x_end_base_width+z_bearing_diam/2+thinwall,x_end_base_height]){
+    translate([-x_end_base_depth/2-x_to_z_offset,-x_end_base_width+z_bearing_size/2,x_end_base_height]){
         translate([17/2,7.5,-3]){
             // Back screw hole for endstop
             translate([-4.75,0,0])cylinder(r=1,h=19,$fn=20);
