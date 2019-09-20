@@ -7,7 +7,7 @@
 
 include <common_dimensions.scad>
 
-y_idler_width = 30;
+y_idler_width = 20;
 
 module y_idler_base(){
     hull() {
@@ -20,7 +20,7 @@ module y_idler_base(){
     for (i=[0,1]) mirror([i,0,0]) {
         translate([-y_idler_width/2,-z_railguide_depth,-x_beam_width/2-x_railguide_width/2]) cube([(y_idler_width-z_railguide_keepout-1)/2,z_railguide_depth,x_railguide_width]);
         translate([-y_idler_width/2,-z_railguide_depth-0.5,-x_beam_width]) cube([(y_idler_width-z_railguide_keepout-1)/2,1,x_beam_width/2-x_railguide_width/2]);
-        translate([-y_idler_width/2,-z_railguide_depth-0.5-4,-x_beam_width]) cube([(y_idler_width-z_railguide_keepout-1)/2,4,1]);
+        translate([-y_idler_width/2,-z_railguide_depth-0.5-4,-x_beam_width]) cube([(y_idler_width*.75)/2,4,1]);
     }
 
 }

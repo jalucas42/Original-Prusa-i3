@@ -8,6 +8,11 @@
 use <polyholes.scad>
 include <common_dimensions.scad>
 
+rotate([0,0,0]) {
+    z_bottom_right();
+    z_bottom_left();
+}
+
 z_bottom_depth = z_rod_to_rail+43/2;
 
 module z_bottom_base(){
@@ -100,5 +105,3 @@ module stepper_motor_holes() {
     translate([-15.5,-15.5,0]) poly_cylinder( r=3.0/2, h=100 );
 }
 
-z_bottom_right();
-//z_bottom_left();

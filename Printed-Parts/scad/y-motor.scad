@@ -7,21 +7,29 @@
 
 include <common_dimensions.scad>
 
-y_idler_width = 25;
+y_idler_width = 20;
+
+rotate([0,-90,0])
+y_motor();
 
 module y_motor_base(){
 
     hull() {
         translate([-y_idler_width/2,0,-x_beam_width]) rotate([0,0,0]) cube([y_idler_width,6,x_beam_width]);
-        translate([-y_idler_width/2,6,-43/2+y_rail_to_idler]) cube([6,43,43]);
+        %translate([-y_idler_width/2,6,-43/2+y_rail_to_idler]) cube([6,43,43]);
+        translate([-y_idler_width/2,6+43/2,y_rail_to_idler]) rotate([0,90,0]) {
+            translate([-1*31/2,-1*31/2,0]) cylinder(d=(43-31),h=6);
+            translate([+1*31/2,-1*31/2,0]) cylinder(d=(43-31),h=6);
+            translate([+1*31/2,+1*31/2,0]) cylinder(d=(43-31),h=6);
+        }
     }
         %translate([0,43/2+6,y_rail_to_idler]) rotate([0,90,0]) cylinder(d=y_idler_bearing_od, h=y_idler_bearing_width, $fn=60, center=true);
 
     // Rail guide + support
-    translate([-y_idler_width/2,-z_railguide_depth,-x_beam_width/2-8.25/2]) cube([y_idler_width,z_railguide_depth,8.25]);    
+    translate([-y_idler_width/2,-z_railguide_depth,-x_beam_width/2-x_railguide_width/2]) cube([y_idler_width,z_railguide_depth,x_railguide_width]);    
     /*for (i=[0,1]) mirror([i,0,0]) {
-        translate([-y_idler_width/2,-z_railguide_depth,-15-8.25/2]) cube([(y_idler_width-z_railguide_keepout-1)/2,z_railguide_depth,8.25]);
-        translate([-y_idler_width/2,-z_railguide_depth-0.5,-30]) cube([(y_idler_width-z_railguide_keepout-1)/2,1,15-8.25/2]);
+        translate([-y_idler_width/2,-z_railguide_depth,-15-x_railguide_width/2]) cube([(y_idler_width-z_railguide_keepout-1)/2,z_railguide_depth,x_railguide_width]);
+        translate([-y_idler_width/2,-z_railguide_depth-0.5,-30]) cube([(y_idler_width-z_railguide_keepout-1)/2,1,15-x_railguide_width/2]);
         translate([-y_idler_width/2,-z_railguide_depth-0.5-4,-30]) cube([(y_idler_width-z_railguide_keepout-1)/2,4,1]);
     }*/
 
@@ -72,10 +80,4 @@ module y_motor(){
         y_motor_base();
         y_motor_holes();
     }
-}
-
-y_motor();
-
-module nema17_holes() {
-
 }
