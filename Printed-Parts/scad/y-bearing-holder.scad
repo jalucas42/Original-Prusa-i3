@@ -13,41 +13,29 @@ module y_bearing_holder_base() {
 
 module y_bearing_holder_holes() {
 
-    // Cut off top of rod slot slightly above center point to give some hold
-    //translate([-y_bearing_holder_width/2,-y_bearing_holder_depth/2-1,y_bearing_holder_height]) cube([y_bearing_holder_width,y_bearing_holder_depth+2,20]);
-
+    // PTFE bearing holes
     translate([0,y_bearing_holder_depth/2-2,y_bearing_holder_rod_ofs]) rotate([90,0,0]) ptfe_bearing_holes(length=y_bearing_holder_depth-4, bearing_od=y_bearing_od);
 
     // Bearing cutout
     //translate([0,-1-y_bearing_holder_depth/2,y_bearing_holder_rod_ofs]) rotate([-90,0,0]) cylinder(d=y_bearing_od, h=y_bearing_holder_depth+2);
+    // Ziptie cutout
+    //translate([0,4/2,y_bearing_holder_rod_ofs]) rotate([90,0,0]) rotate_extrude(angle=360) translate([y_bearing_od/2+2,0]) square([3,4]);
 
-    // Cutout screw holes
-    translate([+20,+10,-1]) rotate([0,0,30]) cylinder(r=1.6, h=50, $fn=6);
-    translate([+20,-10,-1]) rotate([0,0,30]) cylinder(r=1.6, h=50, $fn=6);
-    translate([+20,  0,-1]) rotate([0,0,30]) cylinder(r=1.6, h=50, $fn=6);
-    translate([-20,+10,-1]) rotate([0,0,30]) cylinder(r=1.6, h=50, $fn=6);
-    translate([-20,-10,-1]) rotate([0,0,30]) cylinder(r=1.6, h=50, $fn=6);
-    translate([-20,  0,-1]) rotate([0,0,30]) cylinder(r=1.6, h=50, $fn=6);
-
-    // M3 nut capture holes
-    translate([+20,+10,3]) rotate([0,0,30]) cylinder(d=6.3, h=50, $fn=6);
-    translate([+20,-10,3]) rotate([0,0,30]) cylinder(d=6.3, h=50, $fn=6);
-    translate([+20,  0,3]) rotate([0,0,30]) cylinder(d=6.3, h=50, $fn=6);
-    translate([-20,+10,3]) rotate([0,0,30]) cylinder(d=6.3, h=50, $fn=6);
-    translate([-20,-10,3]) rotate([0,0,30]) cylinder(d=6.3, h=50, $fn=6);
-    translate([-20,  0,3]) rotate([0,0,30]) cylinder(d=6.3, h=50, $fn=6);
+    // Cutout screw holes + capture nuts
+    for (x=[-20,20]) for (y=[-10,0,10]) translate([x,y,0]){
+        translate([0,0,-1]) rotate([0,0,30]) cylinder(r=1.6, h=50, $fn=6);
+        translate([0,0,+3]) rotate([0,0,30]) cylinder(d=6.3, h=50, $fn=6);
+    }
  
     // Center marker cutouts
     translate([0,-y_bearing_holder_depth/2,-1]) rotate([0,0,-30]) cylinder(d=1.5, h=100, $fn=3);
-    translate([0,+y_bearing_holder_depth/2,-1]) rotate([0,0,30]) cylinder(d=1.5, h=100, $fn=3);
+    translate([0,+y_bearing_holder_depth/2,-1]) rotate([0,0,+30]) cylinder(d=1.5, h=100, $fn=3);
 
     translate([+20,-y_bearing_holder_depth/2,-1]) rotate([0,0,-30]) cylinder(d=1.0, h=100, $fn=3);
-    translate([+20,+y_bearing_holder_depth/2,-1]) rotate([0,0,30]) cylinder(d=1.0, h=100, $fn=3);
+    translate([+20,+y_bearing_holder_depth/2,-1]) rotate([0,0,+30]) cylinder(d=1.0, h=100, $fn=3);
     translate([-20,-y_bearing_holder_depth/2,-1]) rotate([0,0,-30]) cylinder(d=1.0, h=100, $fn=3);
-    translate([-20,+y_bearing_holder_depth/2,-1]) rotate([0,0,30]) cylinder(d=1.0, h=100, $fn=3);
+    translate([-20,+y_bearing_holder_depth/2,-1]) rotate([0,0,+30]) cylinder(d=1.0, h=100, $fn=3);
 
-    // Ziptie cutout
-    //translate([0,4/2,y_bearing_holder_rod_ofs]) rotate([90,0,0]) rotate_extrude(angle=360) translate([y_bearing_od/2+2,0]) square([3,4]);
 
 }
 
