@@ -43,8 +43,8 @@ z_top_generate_rod_holder = false; // Optionally generate a Z rod holder, which 
 
 // Outer diam of Z bearing holders in X base.  
 
-//z_bearing_size = z_bearing_diam + 2 * thinwall; // For discrete bearings, include wall to hold bearings
-z_bearing_size = z_bearing_diam; // For PTFE bearings, don't need supportive walls
+z_bearing_size = z_bearing_diam + 2 * thinwall; // For discrete bearings, include wall to hold bearings
+//z_bearing_size = z_bearing_diam; // For PTFE bearings, don't need supportive walls
 
 // Clearance required Z leadscrew to avoid interference.  Potential interference from leadscrew nut, 
 // leadscrew anti-backlash spring/nut, motor/leadscrew coupler, etc.
@@ -52,6 +52,7 @@ z_leadscrew_clearance = 25+3; // Leadscrew coupler is 25mm
 
 z_motor_ofs = z_bearing_size/2 + z_leadscrew_clearance/2; //17; // Z-motor offset from Z-rod (center-to-center) - both are aligned with X axis
 
+x_end_use_ptfe_bearing = false;
 
 x_end_belt_hole_height = x_rod_distance-x_rod_diam-2*thinwall; //31-5; // To fit between NEMA17 mounting screws
 x_end_belt_hole_width = x_idler_bearing_width+0.5; // x_end_base_depth-2*thinwall; // 10;
@@ -77,38 +78,49 @@ y_idler_bearing_od = 9.8;
 y_idler_bearing_id = 3.0; 
 y_idler_bearing_width = 8.5; 
 
-// Dimensions of the Y beltholder component (the sliding piece)
-y_beltholder_width = 18;
-y_beltholder_height = 2 + 9 + 2;
-y_beltholder_depth = 6 + 2;
-
-// Dimensions of the Y beltholder base component (that mounts to the plate)
-y_beltholder_base_height = 9 + y_beltholder_height + 2;
-y_beltholder_base_width = 2*y_beltholder_width + 10;
-y_beltholder_base_depth = y_beltholder_depth + 8;
-
-y_belt_to_plate = 9 + y_beltholder_height/2;
-y_idler_to_plate = y_belt_to_plate + y_idler_bearing_od/2;
+y_belt_to_plate = 13+6; // bottom of top belt (aka top of idler) to bottom of plate.  Adjust this so that Y stepper doesn't hit plate.
+y_idler_to_plate = y_belt_to_plate + y_idler_bearing_od/2; // Center of Y idler to bottom of plate.
 
 //y_plate_to_belt = 2*thinwall; // Bottom of plate to top of belt
+y_plate_to_belt = y_belt_to_plate; // TODO - Fix redundant name!
 
 y_bearing_od = 19.0; // LM10uu
 y_bearing_length = 29.0; // LM10uu
 
 y_bearing_holder_width = 50;
-y_bearing_holder_depth = y_bearing_length;
-y_bearing_holder_rod_ofs = thinwall*2 + y_bearing_od/2; // Offset from Y rod to mounting plate.  Use 2x thinwall to give room for ziptie hole.
+y_bearing_holder_depth = y_bearing_length+2*thinwall; // thinwall to add end nubs to keep bearing from sliding around.
+y_bearing_holder_rod_ofs = thinwall*2 + y_bearing_od/2 + 0.5; // Offset from Y rod to mounting plate.  Use 2x thinwall to give room for ziptie hole.  Extra 0.5 to keep ziptie hole from "bottoming out" of the base.
 y_bearing_holder_height = y_bearing_holder_rod_ofs+y_bearing_od*0.25;
 
 y_rail_to_plate = y_rod_to_rail + y_bearing_holder_rod_ofs; // Offset from top of 3030 rail to bottom of mounting plate
 y_rail_to_idler = y_rail_to_plate - y_idler_to_plate; // Offset from top of 3030 rail to center of idler (and stepper)
 
-z_beam_width = 25;
-z_railguide_width = 6.5; //8.30; // 3030
-z_railguide_depth = 2.0;
-z_railguide_keepout = 12; // 3030 dropin nut is 11, plus margin
+// Dimensions for 3030 extrusion (on Haribo)
+ref_30mm_beam_width = 30; // Nominal beam width
+ref_30mm_railguide_width = 8.30; // Width of rail slot
+ref_30mm_railguide_depth = 2.0; // Thin wall depth at rail slot.
+ref_30mm_railguide_keepout = 12; // Blank space around hole for rail guide - to allow drop nut to turn in slot.
 
-x_beam_width = 25;
-x_railguide_width = 6.5; //8.30; // 3030
-x_railguide_depth = 2.0;
-x_railguide_keepout = 12; // 3030 dropin nut is 11, plus margin
+// Dimensions for 25mm extrusion (on MPCNC)
+ref_25mm_beam_width = 25;
+ref_25mm_railguide_width = 6.50; // (30mm:8.30mm) (25mm:6.50mm)
+ref_25mm_railguide_depth = 2.0;
+ref_25mm_railguide_keepout = 12;
+
+// Dimensions for 25/32 inch extrusion (from MakerFarm printer)
+inch = 1/25.4;
+ref_2532_beam_width = 25/32 * inch;
+ref_2532_railguide_width = 1/4 * inch;
+ref_2532_railguide_depth = 2.0;
+ref_2532_railguide_keepout = 12;
+
+// Dimensions from 25/32in extrusion (from MakerFarm printer)
+z_beam_width = ref_30mm_beam_width;
+z_railguide_width = ref_30mm_railguide_width; // (30mm:8.30mm) (25mm:6.50mm)
+z_railguide_depth = ref_30mm_railguide_depth;
+z_railguide_keepout = ref_2532_railguide_keepout; // 3030 dropin nut is 11, plus margin
+
+x_beam_width = ref_30mm_beam_width;
+x_railguide_width = ref_30mm_railguide_width; // 3030
+x_railguide_depth = ref_30mm_railguide_depth;
+x_railguide_keepout = ref_2532_railguide_keepout; // 3030 dropin nut is 11, plus margin

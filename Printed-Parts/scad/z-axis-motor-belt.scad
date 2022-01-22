@@ -8,13 +8,18 @@
 use <polyholes.scad>
 include <common_dimensions.scad>
 
-z_top_right();
-z_top_left();
+//z_top_right();
+//z_top_left();
 
-module z_top_base(){
+z_motor_belt_right();
+//z_motor_belt_left();
+
+//stepper_motor_holes();
+
+module z_motor_belt_base(){
     hull() {
         translate([-z_motor_ofs-z_beam_motor_ofs-z_beam_width/2,-z_rod_to_rail,0]) cube([z_beam_width,20,5]); // Base
-        cylinder(d=z_rod_diam+thinwall*2, h=5); // Z rod hole base
+        cylinder(d=z_rod_diam+2*(thinwall+2.5+thinwall), h=10); // Z rod hole base
         translate([-z_motor_ofs,0,0]) cylinder(d=22+6, h=7+2); // Z leadscrew hole base
     }
 
@@ -22,6 +27,14 @@ module z_top_base(){
         translate([0,0,5]) cylinder(d1=z_rod_diam+z_top_wall_width*2, d2=z_rod_diam+4, h=5);
     }
 
+    //#translate([-z_motor_ofs-z_beam_motor_ofs+z_beam_width/2+5,-z_rod_to_rail-43/2,0]) cube([43,43,10]); // Base
+
+    hull() {
+        translate([-z_motor_ofs-z_beam_motor_ofs+z_beam_width/2+5+43/2*sqrt(2),-z_rod_to_rail-z_beam_width,5/2]) rotate([0,0,-45]) cube([43,43,5], center=true);
+        translate([-z_motor_ofs-z_beam_motor_ofs+z_beam_width/2,-z_rod_to_rail-z_beam_width,0]) cube([z_top_wall_width,z_beam_width,5]); // Beam wraparound wall
+        cylinder(d=z_rod_diam+2*(thinwall+2.5+thinwall), h=5); // Z rod hole base
+    }
+    
     translate([-z_motor_ofs-z_beam_motor_ofs-z_beam_width/2,-z_rod_to_rail,0]) cube([z_top_wall_width,20,z_top_height]); // Motor-side wall
     ////translate([-z_top_width/2-z_motor_ofs+z_top_width-z_top_wall_width,-z_rod_to_rail,0]) cube([z_top_wall_width,z_top_wall_width+43,z_top_height]); // Rod-side wall
     translate([-z_motor_ofs-z_beam_motor_ofs-z_beam_width/2,-z_rod_to_rail,0]) cube([z_beam_width+z_top_wall_width,z_top_wall_width,z_top_height]); // Base
@@ -39,31 +52,7 @@ module z_top_base(){
 
 }
 
-module z_top_fancy(){
-    hull() {
-        translate([-z_motor_ofs-z_top_width*2/2,-50,0]) cube([z_top_width*2.25, 100, z_top_height/2]);
-        translate([-z_motor_ofs-z_beam_motor_ofs,0,z_top_height*0.75]) rotate([90,0,0]) cylinder(d=z_top_height/2, h=100, center=true);
-    }
-    
-    /*
-    // corner cutouts
-    translate([0.5,-2.5,0]) rotate([0,0,-45-180]) translate([-15,0,-1]) cube([30,30,51]);
-    translate([0.5,40-0.5+5,0]) rotate([0,0,-45+90]) translate([-15,0,-1]) cube([30,30,51]);
-    //translate([-4,40+5,5]) rotate([0,0,-35-0]) translate([0,0,0.1]) cube([30,30,51]);
-    //translate([-4+11,40+5+5,0]) rotate([0,0,-45-0]) translate([0,0,-1]) cube([30,30,51]);
-    translate([8,0,12+20+6]) rotate([0,-90,0]) translate([0,-5,0]) cube([30,50,30]);
-    translate([20,-2,12+8]) rotate([45,0,0]) rotate([0,-90,0]) translate([0,-5,0]) cube([30,50,30]);
-    translate([25,20,12+30]) rotate([-45,0,0]) rotate([0,-90,0]) translate([0,-5,0]) cube([30,50,30]);
-    translate([50-2.5,-5+2.5+67,0]) rotate([0,0,-45-90]) translate([-15,0,-1]) cube([30,30,51]);
-    translate([50-2.5,-5+2.5,0]) rotate([0,0,-45-90]) translate([-15,0,-1]) cube([30,30,51]);
-    //translate([50-1.5,10-1.5,0]) rotate([0,0,-45]) translate([-15,0,-1]) cube([30,30,51]);
-    //translate([0,0,5]) rotate([45+180,0,0]) rotate([0,0,-45+90]) translate([0,0,-15]) cube([30,30,30]);
-    // Stiffner cut out
-    translate([30,0,5.5]) rotate([0,-45,0]) translate([0,-5,0]) cube([30,60,30]);
-    */
-}
-
-module z_top_holes(){
+module z_motor_belt_holes(){
 
     // Hole for Z rod
     if (z_top_generate_rod_holder) {
@@ -79,7 +68,16 @@ module z_top_holes(){
         poly_cylinder(h = 50, r=z_rod_diam_tight/2, center=true);
         translate([0,1,0.6]) rotate([0,0,180]) cube([z_motor_ofs,2,100]); // it's bit up because it helps with printing
     }
+
+    translate([-z_motor_ofs-z_beam_motor_ofs+z_beam_width/2+5+43/2*sqrt(2),-z_rod_to_rail-z_beam_width,0]) rotate([0,0,-45]) stepper_motor_holes();
     
+    // Nut trap
+    rotate([0,0,90]) {
+        translate([0,0,5]) rotate([90,0,0]) cylinder(d=3.4, h=100, center=false, $fn=8);
+        hull() for (z=[0,1]) translate([0,-z_rod_diam/2-thinwall,5+z*20]) rotate([90,90,0]) cylinder(d=6.4, h=2.5, center=false, $fn=6);
+        hull() for (z=[0,1]) translate([0,-z_rod_diam/2-thinwall-2.5-thinwall,5+z*20]) rotate([90,0,0]) cylinder(d=7.0, h=100, center=false, $fn=8);
+    }
+        
     // Hole for Z leadscrew bearing
     translate([-z_motor_ofs,0,-1]) cylinder(r=15/2, h=100);
     translate([-z_motor_ofs,0,2+0.001]) cylinder(r=22/2, h=8);
@@ -100,26 +98,24 @@ module z_top_holes(){
     
 }
 
-module z_top_right(){
-    intersection() {
-        difference(){
-            z_top_base();
-            z_top_holes();
-        }
-        //z_top_fancy();
+module z_motor_belt_right() {
+    difference(){
+        z_motor_belt_base();
+        z_motor_belt_holes();
     }
 }
 
-module z_top_left(){
- translate([z_rod_diam+z_top_wall_width*3,0,0]) mirror([1,0,0]) 
-    z_top_right();
+module z_motor_belt_left(){
+ //translate([z_rod_diam+z_top_wall_width*4,0,0]) 
+    mirror([1,0,0]) 
+    z_motor_belt_right();
 }
 
 module stepper_motor_holes() {
-    poly_cylinder( r=12.5, h=100);
-    translate([+15.5,+15.5,0]) poly_cylinder( r=3.0/2, h=100 );
-    translate([+15.5,-15.5,0]) poly_cylinder( r=3.0/2, h=100 );
-    translate([-15.5,+15.5,0]) poly_cylinder( r=3.0/2, h=100 );
-    translate([-15.5,-15.5,0]) poly_cylinder( r=3.0/2, h=100 );
+    //%cube([43,43,10], center=true);
+    translate([-31/2,-31/2,0]) for (r=[-2:15]) rotate([0,0,r]) {
+        for (x=[0,31]) for (y=[0,31]) translate([x,y,0]) poly_cylinder( r=3.2/2, h=100, center=true);       
+        translate([31/2,31/2,0]) poly_cylinder( r=12.5, h=100, center=true);
+    }
 }
 

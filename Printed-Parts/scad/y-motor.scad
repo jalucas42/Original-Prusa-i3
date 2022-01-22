@@ -20,7 +20,7 @@ module y_motor_base(){
         translate([-y_idler_width/2,6+43/2,y_rail_to_idler]) rotate([0,90,0]) {
             translate([-1*31/2,-1*31/2,0]) cylinder(d=(43-31),h=6);
             translate([+1*31/2,-1*31/2,0]) cylinder(d=(43-31),h=6);
-            translate([+1*31/2,+1*31/2,0]) cylinder(d=(43-31),h=6);
+            //translate([+1*31/2,+1*31/2,0]) cylinder(d=(43-31),h=6);
         }
     }
         %translate([0,43/2+6,y_rail_to_idler]) rotate([0,90,0]) cylinder(d=y_idler_bearing_od, h=y_idler_bearing_width, $fn=60, center=true);

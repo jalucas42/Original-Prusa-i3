@@ -9,13 +9,13 @@ use <polyholes.scad>
 include <common_dimensions.scad>
 
 rotate([0,0,0]) {
-    z_bottom_right();
-    z_bottom_left();
+    z_motor_direct_right();
+    z_motor_direct_left();
 }
 
 z_bottom_depth = z_rod_to_rail+43/2;
 
-module z_bottom_base(){
+module z_motor_direct_base(){
     translate([-z_bottom_width/2-z_motor_ofs,-z_rod_to_rail,0]) cube([z_bottom_width,z_bottom_depth,6]); // Base
     cylinder(d=z_rod_diam+2*thinwall, h=6, $fn=30);
     translate([-z_bottom_width/2-z_motor_ofs,-z_rod_to_rail,0]) cube([z_bottom_wall_width,z_bottom_depth,z_bottom_height]); // Motor-side wall
@@ -32,18 +32,18 @@ module z_bottom_base(){
     %translate([-z_motor_ofs-z_beam_motor_ofs-z_beam_width/2,-z_rod_to_rail-z_beam_width,0]) cube([z_beam_width,z_beam_width,z_bottom_height]);
 }
 
-module z_bottom_fancy(){
+module z_motor_direct_fancy(){
     hull() {
         translate([-z_motor_ofs-z_bottom_width/2-12,-100,0]) cube([z_bottom_width+20, 200, z_bottom_height/2]);
         translate([-z_motor_ofs-z_beam_motor_ofs,0,z_bottom_height*0.75]) rotate([90,0,0]) cylinder(d=z_bottom_height/2, h=200, center=true);
     }
 }
 
-module z_bottom_holes(){
+module z_motor_direct_holes(){
 
     // Z rod holder
-    translate([0,0,5+1]) rotate([0,180,0]) poly_cylinder(h = 50, r=z_rod_diam_tight/2);
-    translate([z_rod_diam/2,1,0.6]) rotate([0,0,180]) cube([z_rod_diam+z_motor_ofs,2,7]); // it's bit up because it helps with printing
+    translate([0,0,5+1+0.001]) rotate([0,180,0]) poly_cylinder(h = 50, r=z_rod_diam_tight/2);
+    translate([z_rod_diam/2,1,0.6]) rotate([0,0,180]) cube([z_rod_diam+z_motor_ofs,2,6-0.6]); // it's bit up because it helps with printing
     
     // Cutout to allow sliding stepper in while z-axis is mounted to rail.
     translate([-8/2-z_motor_ofs,0,-1]) cube([8,100,20]);
@@ -80,21 +80,21 @@ module z_bottom_holes(){
     translate([-50-z_motor_ofs,-50+26,32]) rotate([-25,0,0]) cube([100, 100, 100]);    
 }
 
-module z_bottom_right(){
+module z_motor_direct_right(){
     intersection() {
         difference(){
-            z_bottom_base();
-            z_bottom_holes();
+            z_motor_direct_base();
+            z_motor_direct_holes();
         }
-        z_bottom_fancy();
+        z_motor_direct_fancy();
     }
     %translate([-43/2-z_motor_ofs,-43/2,7]) color("red",0.25) cube([43,43,50]);
 
 }
 
-module z_bottom_left(){
+module z_motor_direct_left(){
  translate([z_rod_diam+z_bottom_wall_width*2,0,0]) mirror([1,0,0]) 
-    z_bottom_right();
+    z_motor_direct_right();
 }
 
 module stepper_motor_holes() {

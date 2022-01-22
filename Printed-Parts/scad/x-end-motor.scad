@@ -97,13 +97,11 @@ module x_end_motor(){
     difference(){
         union(){
             x_end_motor_base();
-            x_end_motor_endstop_base();
         }
 
         x_end_motor_shaft_cutout();
         //x_end_idler_holes();
         x_end_motor_holes();
-        x_end_motor_endstop_holes();    
 
         // Notch on endstop holder
         translate([-12,-42,65]) rotate([-35,0,0])  rotate([0,0,45]) cube(10,10,10);
